@@ -17,10 +17,10 @@ app.engine('handlebars', handlebars({
 //Tells app to use '/public' folder for static files
 app.use(express.static('public'))
 
-//homr page route
+//home page route
 app.get('/', (req, res) => {
     //Serves the body of the page ("main.handlebars") to the container ("index.handlebars")
-    res.render('main', {layout : 'index'});
+    res.render('home', {layout : 'index'});
 });
 
 //render and startup server
