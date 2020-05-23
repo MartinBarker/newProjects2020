@@ -17,23 +17,19 @@
                     <hr>
                     <!-- Input Option 1 -->
                     <h4 class="widgettitle"><strong>Input Option 1:</strong></h4>
-                    <p>Input a discogs release URL like
-                        <br>
-                        <a
-                            href="https://www.discogs.com/Le-Car-Auto-Biography/release/41048">https://www.discogs.com/Le-Car-Auto-Biography/release/41048</a><br>
-                        with tracklist timestamps,
-                        then click 'Submit'</p>
-                    <p>Make sure it is a release url that ends with numbers like this: '/release/41048'
+                    
+                    
+                     
+                   
                         <form>
                             <input type="text" placeholder='Discogs release URL' name="url" id="urlInput">
-                            <button id='urlInputButton' name="data" type="button"
-                                onclick="inputOption1(document.getElementById('urlInput').value)">Submit</button>
+                            <button id='urlInputButton' name="data" type="button" onclick="inputOption1(document.getElementById('urlInput').value)">Submit</button> Input a Discogs URL like <a href="https://www.discogs.com/Le-Car-Auto-Biography/release/41048">this</a>.
                         </form>
                         <hr>
 
                         <!-- Input Option 2 -->
                         <h4 class="widgettitle"><strong>Input Option 2:</strong></h4>
-                        <input type="file" id="file" multiple="multiple" onclick="blah()" />
+                        <input type="file" id="file" multiple="multiple"/>
                         <audio id="audio"></audio>
                         <hr>
 
@@ -44,7 +40,7 @@
                         <textarea id="inputBox" rows="4" cols="70" placeholder="Select an input method"></textarea>
                        
                         <br>
-                        <button id='copyToClipboarad' type="button">Copy</button>
+                        <button id='copyToClipboarad' onclick="copyToClipboard('#inputBox')" type="button">Copy</button>
                        
 
         
