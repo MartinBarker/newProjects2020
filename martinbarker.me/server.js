@@ -17,11 +17,12 @@ app.engine('handlebars', handlebars({
 //Tells app to use '/public' folder for static files
 app.use(express.static('public'))
 
-//home page route
-app.get('/', (req, res) => {
-    //Serves the body of the page ("main.handlebars") to the container ("index.handlebars")
-    res.render('home', {layout : 'index'});
-});
+//connect all routes
+const routes = require('./routes');
+app.use('/', routes);
+
+//use this folder for static files
+app.use('/static/', express.static(__dirname + '/static/'));
 
 //render and startup server
 app.listen(port, () => console.log(`App listening to port ${port}`));
