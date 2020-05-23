@@ -21,6 +21,16 @@ router.get('/tagger',function(req, res){
     });
   });
 
+//discogstagger routes
+router.get('/discogstagger',function(req, res){    
+    res.render('discogstagger', {
+      layout : 'index', 
+      pageTitle: 'discogstagger.site',
+      projectsTab:'active',
+      icon: '/static/assets/img/discogstagger.png'
+    });
+  });
+
 /*
 //projects page
 router.get('/projects', (req, res) => {
@@ -34,9 +44,6 @@ router.get('/projects', (req, res) => {
 
 //tagger routes
 router.use('/tagger', require('./taggerRoutes').router);
-
-//discogstagger routes
-//router.use('/discogstagger', require('./discogstagger_api').router);
 
 router.get("/url", (req, res, next) => {
     res.json(["Tony","Lisa","Michael","Ginger","Food"]);
