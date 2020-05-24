@@ -153,14 +153,24 @@ async function getArtistTags(discogsReleaseData){
         //get more details on each artist
         discogsReleaseData.artists.forEach(async function(element) {
             let discogsArtistData = await discogsAPIQuery(element.resource_url) 
+            //if members obj exists
+            if(discogsArtistData.members){
+                discogsArtistData.members.forEach(async function(element) {
+                    artistTags.push(element.name)
+                    let artistData = await discogsAPIQuery(element.resource_url)
+                    artistTags.concat(artistData.namevariations) 
+                    artistData.groups.forEach(async function(element) {
+                        artistTags.push(element.name)
+                    })
+                    
+                })
+            }
             artistTags.push(discogsArtistData.realname)
             artistTags.concat(discogsArtistData.namevariations)
             //for each item in groups
             discogsArtistData.groups.forEach(async function(element) {
                 artistTags.push(element.name)
-                //console.log("artistTags = ", artistTags)
             })
-            
         });
 
         //artistTags.push('tempTag')
