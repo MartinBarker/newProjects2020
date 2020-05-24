@@ -1,6 +1,166 @@
 var tagsJsonGlobal = null;
 var tagsJsonDisplay = null;
 
+$(document).ready(function () {
+    //function to make sure hitting 'enter' key submits input box
+    $(window).keydown(function (event) {
+        if (event.keyCode == 13) {
+            event.preventDefault();
+            document.getElementById("urlInputButton").click();
+            return false;
+        }
+    });
+
+    //when release artist slider changes
+    $('#releaseArtistsSlider').on('input', function() {
+        prepUpdateTagsBox()
+    })
+    //when releaseInfo slider changes
+    $('#releaseInfoSlider').on('input', function() {
+        prepUpdateTagsBox()
+    })
+    //when tracklist slider changes
+    $('#tracklistSlider').on('input', function() {
+        prepUpdateTagsBox()
+    })
+    //when combinations slider changes
+    $('#combinationsSlider').on('input', function() {
+        prepUpdateTagsBox()
+    })
+
+
+    //releaseArtist precentage update : declarations
+    releaseArtist_i = document.getElementById('releaseArtistsSlider');
+    releaseArtist_o = document.getElementById('releaseArtistsSliderValue');
+    releaseArtist_o.innerHTML = releaseArtist_i.value;
+    //setting initial value
+    releaseArtist_o.innerHTML = releaseArtist_i.value.toString() + "%";
+    //listening and setting when slider changes
+    releaseArtist_i.addEventListener('input', function () {
+        releaseArtist_o.innerHTML = releaseArtist_i.value.toString() + "%";
+    }, false);
+
+    //releaseInfo precentage update : declarations
+    releaseInfo_i = document.getElementById('releaseInfoSlider');
+    releaseInfo_o = document.getElementById('releaseInfoSliderValue');
+    releaseInfo_o.innerHTML = releaseInfo_i.value;
+    //setting initial value
+    releaseInfo_o.innerHTML = releaseInfo_i.value.toString() + "%";
+    //listening and setting when slider changes
+    releaseInfo_i.addEventListener('input', function () {
+        releaseInfo_o.innerHTML = releaseInfo_i.value.toString() + "%";
+    }, false);
+
+    //tracklist precentage update : declarations
+    tracklist_i = document.getElementById('tracklistSlider');
+    tracklist_o = document.getElementById('tracklistSliderValue');
+    tracklist_o.innerHTML = tracklist_i.value;
+    //setting initial value
+    tracklist_o.innerHTML = tracklist_i.value.toString() + "%";
+    //listening and setting when slider changes
+    tracklist_i.addEventListener('input', function () {
+        tracklist_o.innerHTML = tracklist_i.value.toString() + "%";
+    }, false);
+
+    //combinations precentage update : declarations
+    combinations_i = document.getElementById('combinationsSlider');
+    combinations_o = document.getElementById('combinationsSliderValue');
+    combinations_o.innerHTML = combinations_i.value;
+    //setting initial value
+    combinations_o.innerHTML = combinations_i.value.toString() + "%";
+    //listening and setting when slider changes
+    combinations_i.addEventListener('input', function () {
+        combinations_o.innerHTML = combinations_i.value.toString() + "%";
+    }, false);
+
+})
+
+async function getTags(input) {
+    console.log("getTags, input = ", input)
+
+    //reset table slider values
+    document.getElementById('releaseArtistsSlider').value = 100;
+    document.getElementById('releaseArtistsSliderValue').innerHTML = `100%`;
+    document.getElementById('releaseInfoSlider').value = 100;
+    document.getElementById('releaseInfoSliderValue').innerHTML = `100%`;
+    document.getElementById('tracklistSlider').value = 100;
+    document.getElementById('tracklistSliderValue').innerHTML = `100%`;
+    document.getElementById('combinationsSlider').value = 100;
+    document.getElementById('combinationsSliderValue').innerHTML = `100%`;
+
+    //parse release id from url
+    var urlArr = input.split('/');
+    var discogsListingType = urlArr[urlArr.length - 2];
+    var discogsListingCode = urlArr[urlArr.length - 1];
+
+    //get tracklistData from discogs API
+    let discogsData = await discogsAPIQuery(discogsListingType, discogsListingCode) 
+    console.log("discogsData = ", discogsData)
+
+    //get releaseArtist tags
+    let releaseArtistTags = ['tag1', 'tag2']
+
+    //get releaseInfo tags
+    let releaseInfoTags = ['releaseinfo1', 'releaseinfo2']
+
+    //get tracklist tags
+    let tracklistTags = ['track1', 'track2', 'track3']
+
+    //get combinations tags
+    let combinationsTags = ['combos1', 'combos2', 'combos3']
+
+    var jsonResults = {'tags':{'releaseArtist':['a', 'b', 'rr', 'tt', 'pp', '90'], 'releaseInfo':[], 'tracklist':['e', 'f'], 'combinations':['g', 'h']}};
+    console.log("jsonResults = ", jsonResults)
+
+    //store as global variable?
+    tagsJsonGlobal = jsonResults;
+    tagsJsonDisplay = jsonResults;
+
+    //convert tags json object to comma seperated string var
+    var tagsAll = getAllTags(jsonResults);
+    console.log("tagsAll = ", tagsAll);
+
+    var releaseArtistsCheckboxValue = $('.releaseArtistsCheckbox:checked').val();
+    var releaseArtistsSliderValue = $('.releaseArtistsSlider').val();
+
+    var releaseInfoCheckboxValue = $('.releaseInfoCheckbox:checked').val();
+    var releaseInfoSliderValue = $('.releaseInfoSlider').val();
+
+    var tracklistCheckboxValue = $('.tracklistCheckbox:checked').val();
+    var tracklistSliderValue = $('.tracklistSlider').val();
+
+    var combinationsCheckboxValue = $('.combinationsCheckbox:checked').val();
+    var combinationsSliderValue = $('.combinationsSlider').val();
+
+    updateTagsBox(releaseArtistsCheckboxValue, releaseArtistsSliderValue, releaseInfoCheckboxValue, releaseInfoSliderValue, tracklistCheckboxValue, tracklistSliderValue, combinationsCheckboxValue, combinationsSliderValue);
+
+    //set tags
+    document.getElementById("tagsBox").value = tagsAll;
+
+    return false;
+}
+
+
+async function discogsAPIQuery(discogsListingType, discogsListingCode) {
+    return new Promise(function (resolve, reject) {
+        $.ajax({
+            url: "https://api.discogs.com/" + discogsListingType + 's/' + discogsListingCode,
+            type: 'GET',
+            contentType: "application/json",
+            success: function (data) {
+                resolve(data)
+            },
+            error: function (error) { 
+                resolve("error")
+            }
+        })
+    });
+}
+
+
+
+// ~~~~~~~~~~~~~~~~~~~~~~~ OLD CODE BELOW ~~~~~~~~~~~~~~~ //
+
 function ShortenBoxTo500(){
     var currentTags = document.getElementById("tagsBox").value;
     var trimmedString = currentTags.substring(0, 500);
@@ -98,83 +258,6 @@ function getAllTags(jsonObj) {
     return allTags;
 }
 
-async function getTags(input) {
-    console.log("getTags, input = ", input)
-
-    //parse release id from url
-    var urlArr = input.split('/');
-    var discogsListingType = urlArr[urlArr.length - 2];
-    var discogsListingCode = urlArr[urlArr.length - 1];
-
-    //get tracklistData from discogs API
-    let discogsData = await discogsAPIQuery(discogsListingType, discogsListingCode) 
-    console.log("discogsData = ", discogsData)
-
-    // ~~~~~~~~ old below ~~~~~~~~~~~~~~~ //
-    /*
-
-    //parse release id from url
-    var index = input.indexOf("release/");
-    var releaseID = input.substring(index + 8, input.length);
-
-    //make ajax request to python for tags based on passed in release id
-    let results = await getValues(releaseID);
-    console.log("getTags(), results = ", results)
-
-    //convert to json
-    var jsonResults = results;
-
-    //store as global variable?
-    tagsJsonGlobal = jsonResults;
-    tagsJsonDisplay = jsonResults;
-
-    var tagsAll = getAllTags(jsonResults);
-    console.log("tagsAll = ", tagsAll);
-
-    var releaseArtistsCheckboxValue = $('.releaseArtistsCheckbox:checked').val();
-    var releaseArtistsSliderValue = $('.releaseArtistsSlider').val();
-
-    var releaseInfoCheckboxValue = $('.releaseInfoCheckbox:checked').val();
-    var releaseInfoSliderValue = $('.releaseInfoSlider').val();
-
-    var tracklistCheckboxValue = $('.tracklistCheckbox:checked').val();
-    var tracklistSliderValue = $('.tracklistSlider').val();
-
-    //var publisherNotesCheckboxValue = $('.publisherNotesCheckbox:checked').val();
-    //var publisherNotesSliderValue = $('.publisherNotesSlider').val();
-
-    var combinationsCheckboxValue = $('.combinationsCheckbox:checked').val();
-    var combinationsSliderValue = $('.combinationsSlider').val();
-
-    //updateTagsBox(releaseArtistsCheckboxValue, releaseArtistsSliderValue, releaseInfoCheckboxValue, releaseInfoSliderValue, tracklistCheckboxValue, tracklistSliderValue, publisherNotesCheckboxValue, publisherNotesSliderValue, combinationsCheckboxValue, combinationsSliderValue);
-    updateTagsBox(releaseArtistsCheckboxValue, releaseArtistsSliderValue, releaseInfoCheckboxValue, releaseInfoSliderValue, tracklistCheckboxValue, tracklistSliderValue, combinationsCheckboxValue, combinationsSliderValue);
-
-    //set tags
-    document.getElementById("tagsBox").value = tagsAll;
-    //reveal helper stuff
-    //document.getElementById("tagsHelperStuff").style.visibility = "visible";
-*/
-    return false;
-}
-
-
-async function discogsAPIQuery(discogsListingType, discogsListingCode) {
-    return new Promise(function (resolve, reject) {
-        $.ajax({
-            url: "https://api.discogs.com/" + discogsListingType + 's/' + discogsListingCode,
-            type: 'GET',
-            contentType: "application/json",
-            success: function (data) {
-                resolve(data)
-            },
-            error: function (error) { 
-                resolve("error")
-            }
-        })
-    });
-}
-
-
 function prepUpdateTagsBox() {
     var releaseArtistsCheckboxValue = $('.releaseArtistsCheckbox:checked').val();
     var releaseArtistsSliderValue = $('.releaseArtistsSlider').val();
@@ -185,9 +268,6 @@ function prepUpdateTagsBox() {
     var tracklistCheckboxValue = $('.tracklistCheckbox:checked').val();
     var tracklistSliderValue = $('.tracklistSlider').val();
 
-    //var publisherNotesCheckboxValue = $('.publisherNotesCheckbox:checked').val();
-    //var publisherNotesSliderValue = $('.publisherNotesSlider').val();
-
     var combinationsCheckboxValue = $('.combinationsCheckbox:checked').val();
     var combinationsSliderValue = $('.combinationsSlider').val();
 
@@ -197,33 +277,39 @@ function prepUpdateTagsBox() {
 }
 
 function updateTagsBox(releaseArtistsCheckboxValue, releaseArtistsSliderValue, releaseInfoCheckboxValue, releaseInfoSliderValue, tracklistCheckboxValue, tracklistSliderValue, combinationsCheckboxValue, combinationsSliderValue) {
-    //function updateTagsBox(releaseArtistsCheckboxValue, releaseArtistsSliderValue, releaseInfoCheckboxValue, releaseInfoSliderValue, tracklistCheckboxValue, tracklistSliderValue, publisherNotesCheckboxValue, publisherNotesSliderValue, combinationsCheckboxValue, combinationsSliderValue){
     console.log("releaseArtists checkbox = ", releaseArtistsCheckboxValue, ". slider = ", releaseArtistsSliderValue)
     console.log("releaseInfo checkbox = ", releaseInfoCheckboxValue, ". slider = ", releaseInfoSliderValue)
     console.log("tracklist checkbox = ", tracklistCheckboxValue, ". slider = ", tracklistSliderValue)
-    //console.log("publisherNotes checkbox = ", publisherNotesCheckboxValue, ". slider = ", publisherNotesSliderValue)
     console.log("combinations checkbox = ", combinationsCheckboxValue, ". slider = ", combinationsSliderValue)
 
     var tags = "";
 
     if (releaseArtistsCheckboxValue == 'on') {
-        tags = tags + addTags(tagsJsonGlobal.tags.releaseArtist, (releaseArtistsSliderValue / 100));
+        tags = tags + addTags(tagsJsonGlobal.tags.releaseArtist, (releaseArtistsSliderValue / 100)).tags;
+        document.getElementById('releaseArtistsNumber').innerHTML = addTags(tagsJsonGlobal.tags.releaseArtist, (releaseArtistsSliderValue / 100)).length;
+    }else{
+        document.getElementById('releaseArtistsNumber').innerHTML = "0"
     }
-
+    
     if (releaseInfoCheckboxValue == 'on') {
-        tags = tags + addTags(tagsJsonGlobal.tags.releaseInfo, (releaseInfoSliderValue / 100));
+        tags = tags + addTags(tagsJsonGlobal.tags.releaseInfo, (releaseInfoSliderValue / 100)).tags;
+        document.getElementById('releaseInfoNumber').innerHTML = addTags(tagsJsonGlobal.tags.releaseInfo, (releaseInfoSliderValue / 100)).length;
+    }else{
+        document.getElementById('releaseInfoNumber').innerHTML = "0"
     }
 
     if (tracklistCheckboxValue == 'on') {
-        tags = tags + addTags(tagsJsonGlobal.tags.tracklist, (tracklistSliderValue / 100));
+        tags = tags + addTags(tagsJsonGlobal.tags.tracklist, (tracklistSliderValue / 100)).tags;
+        document.getElementById('tracklistNumber').innerHTML = addTags(tagsJsonGlobal.tags.tracklist, (tracklistSliderValue / 100)).length;
+    }else{
+        document.getElementById('tracklistNumber').innerHTML = "0"
     }
 
-    //if(publisherNotesCheckboxValue == 'on'){
-    //    tags = tags + addTags(tagsJsonGlobal.tags.publisherNotes, (publisherNotesSliderValue / 100));
-    //}
-
     if (combinationsCheckboxValue == 'on') {
-        tags = tags + addTags(tagsJsonGlobal.tags.combinations, (combinationsSliderValue / 100));
+        tags = tags + addTags(tagsJsonGlobal.tags.combinations, (combinationsSliderValue / 100)).tags;
+        document.getElementById('combinationsNumber').innerHTML = addTags(tagsJsonGlobal.tags.combinations, (combinationsSliderValue / 100)).length;
+    }else{
+        document.getElementById('combinationsNumber').innerHTML = "0"
     }
 
     document.getElementById("tagsBox").value = tags;
@@ -239,52 +325,7 @@ function addTags(tags, percentToInclude) {
     for (var i = 0; i < numberOfTagsToDisplay; i++) {
         tempTags = tempTags + tags[i] + ","
     }
-    return tempTags;
+    return {tags:tempTags, length:numberOfTagsToDisplay};
 }
 
-/*
-//releaseArtist precentage update : declarations
-releaseArtist_i = document.getElementById('releaseArtistsSlider');
-releaseArtist_o = document.getElementById('releaseArtistsSliderValue');
-releaseArtist_o.innerHTML = releaseArtist_i.value;
-//setting initial value
-releaseArtist_o.innerHTML = releaseArtist_i.value.toString() + "%";
-//listening and setting when slider changes
-releaseArtist_i.addEventListener('input', function () {
-    releaseArtist_o.innerHTML = releaseArtist_i.value.toString() + "%";
-}, false);
 
-//releaseInfo precentage update : declarations
-releaseInfo_i = document.getElementById('releaseInfoSlider');
-releaseInfo_o = document.getElementById('releaseInfoSliderValue');
-releaseInfo_o.innerHTML = releaseInfo_i.value;
-//setting initial value
-releaseInfo_o.innerHTML = releaseInfo_i.value.toString() + "%";
-//listening and setting when slider changes
-releaseInfo_i.addEventListener('input', function () {
-    releaseInfo_o.innerHTML = releaseInfo_i.value.toString() + "%";
-}, false);
-
-//tracklist precentage update : declarations
-tracklist_i = document.getElementById('tracklistSlider');
-tracklist_o = document.getElementById('tracklistSliderValue');
-tracklist_o.innerHTML = tracklist_i.value;
-//setting initial value
-tracklist_o.innerHTML = tracklist_i.value.toString() + "%";
-//listening and setting when slider changes
-tracklist_i.addEventListener('input', function () {
-    tracklist_o.innerHTML = tracklist_i.value.toString() + "%";
-}, false);
-
-//combinations precentage update : declarations
-combinations_i = document.getElementById('combinationsSlider');
-combinations_o = document.getElementById('combinationsSliderValue');
-combinations_o.innerHTML = combinations_i.value;
-//setting initial value
-combinations_o.innerHTML = combinations_i.value.toString() + "%";
-//listening and setting when slider changes
-combinations_i.addEventListener('input', function () {
-    combinations_o.innerHTML = combinations_i.value.toString() + "%";
-}, false);
-
-*/
