@@ -94,11 +94,11 @@ async function getTags(input) {
     var discogsListingCode = urlArr[urlArr.length - 1];
 
     //get tracklistData from discogs API
-    let discogsData = await discogsAPIQuery(discogsListingType, discogsListingCode) 
-    console.log("discogsData = ", discogsData)
+    let discogsReleaseData = await discogsAPIQuery("https://api.discogs.com/" + discogsListingType + 's/' + discogsListingCode) 
+    console.log("discogsReleaseData = ", discogsReleaseData)
 
     //get releaseArtist tags
-    let releaseArtistTags = ['tag1', 'tag2']
+    let releaseArtistTags = await getArtistTags(discogsReleaseData)  //['tag1', 'tag2']
 
     //get releaseInfo tags
     let releaseInfoTags = ['releaseinfo1', 'releaseinfo2']
@@ -109,7 +109,7 @@ async function getTags(input) {
     //get combinations tags
     let combinationsTags = ['combos1', 'combos2', 'combos3']
 
-    var jsonResults = {'tags':{'releaseArtist':['a', 'b', 'rr', 'tt', 'pp', '90'], 'releaseInfo':[], 'tracklist':['e', 'f'], 'combinations':['g', 'h']}};
+    var jsonResults = {'tags':{'releaseArtist':releaseArtistTags, 'releaseInfo':[], 'tracklist':['e', 'f'], 'combinations':['g', 'h']}};
     console.log("jsonResults = ", jsonResults)
 
     //store as global variable?
@@ -140,11 +140,38 @@ async function getTags(input) {
     return false;
 }
 
+async function getArtistTags(discogsReleaseData){
+    return new Promise(async function (resolve, reject) {
+        var artistTags = []
+        //push artists_sort
+        artistTags.push(discogsReleaseData.artists_sort)
+        //get name for each artist in artists object
+        discogsReleaseData.artists.forEach(function(element) {
+            artistTags.push(element.name)
+            artistTags.push(element.anv)
+        });
+        //get more details on each artist
+        discogsReleaseData.artists.forEach(async function(element) {
+            let discogsArtistData = await discogsAPIQuery(element.resource_url) 
+            artistTags.push(discogsArtistData.realname)
+            artistTags.concat(discogsArtistData.namevariations)
+            //for each item in groups
+            discogsArtistData.groups.forEach(async function(element) {
+                artistTags.push(element.name)
+                //console.log("artistTags = ", artistTags)
+            })
+            
+        });
 
-async function discogsAPIQuery(discogsListingType, discogsListingCode) {
+        //artistTags.push('tempTag')
+        resolve(artistTags);
+    })
+}
+
+async function discogsAPIQuery(queryURL) {
     return new Promise(function (resolve, reject) {
         $.ajax({
-            url: "https://api.discogs.com/" + discogsListingType + 's/' + discogsListingCode,
+            url: queryURL,
             type: 'GET',
             contentType: "application/json",
             success: function (data) {
@@ -158,6 +185,19 @@ async function discogsAPIQuery(discogsListingType, discogsListingCode) {
 }
 
 
+function copyToClipboard(element) {
+
+    /* Get the text field */
+    var copyText = document.getElementById("tagsBox");
+
+    /* Select the text field */
+    copyText.select();
+    copyText.setSelectionRange(0, 99999); /*For mobile devices*/
+
+    /* Copy the text inside the text field */
+    document.execCommand("copy");
+
+  }
 
 // ~~~~~~~~~~~~~~~~~~~~~~~ OLD CODE BELOW ~~~~~~~~~~~~~~~ //
 
