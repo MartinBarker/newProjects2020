@@ -1,0 +1,8 @@
+README.md
+setup.py
+bin2vid/__init__.py
+bin2vid.egg-info/PKG-INFO
+bin2vid.egg-info/SOURCES.txt
+bin2vid.egg-info/dependency_links.txt
+bin2vid.egg-info/requires.txt
+bin2vid.egg-info/top_level.txt
