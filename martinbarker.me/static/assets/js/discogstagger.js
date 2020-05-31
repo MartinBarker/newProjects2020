@@ -153,15 +153,18 @@ async function getCombinationTags(discogsReleaseData){
         let comboTags = []
         //get vars:
         //title
-        let releaseTitle = removeNumberParenthesis(discogsReleaseData.title)
+        let title = removeNumberParenthesis(discogsReleaseData.title)
         //year
         let year = discogsReleaseData.year
         //artist_sort
-        let artists_sort = removeNumberParenthesis(discogsReleaseData.artists_sort)
+        let artist = removeNumberParenthesis(discogsReleaseData.artists_sort)
         //style
         let style = discogsReleaseData.styles[0]
         //genre
         let genre = discogsReleaseData.genres[0]
+
+        //create tags to combine and push:
+        vars.push(`${title} ${artist}`)
         
         resolve(comboTags)
     })
