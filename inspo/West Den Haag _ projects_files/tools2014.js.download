@@ -1,0 +1,331 @@
+/*
+==============
+EXTERNAL LINKS
+==============
+*/
+
+$(document).ready(function() {
+	externalLinks();
+	$('.toggle_next_div').click(function() {
+		 var src = ($(this).find('img').attr('src') === 'http://westdenhaag.nl/_media/pics/arrow2.gif')
+            ? 'http://westdenhaag.nl/_media/pics/arrow1.gif'
+            : 'http://westdenhaag.nl/_media/pics/arrow2.gif';
+         $(this).find('img').attr('src', src);
+         // and toggle the Div.
+         if ($(this).find('img').attr('src')=='http://westdenhaag.nl/_media/pics/arrow2.gif') ($(this).next("div").slideDown());
+         if ($(this).find('img').attr('src')=='http://westdenhaag.nl/_media/pics/arrow1.gif') ($(this).next("div").slideUp());
+	});
+});	
+
+
+function externalLinks()
+{
+	if (!document.getElementsByTagName) return;
+	var anchors = document.getElementsByTagName("a");
+	for (var i=0; i<anchors.length; i++)
+	{
+	 var anchor = anchors[i];
+	if (anchor.getAttribute("href") && anchor.getAttribute("rel") == "external") anchor.target = "_blank";
+	if (anchor.getAttribute("href") && anchor.getAttribute("rel") == "external") anchor.className = "outside";
+
+	}
+}
+
+
+
+
+/*
+==============
+IMAGE LOADER
+==============
+*/
+
+function showPic (path,whichpic,amount,whichtable) {
+	//scroll(0,0);
+	currentslide = window.currentslide || new Array(); 
+	maxslides = window.maxslides || new Array();
+	currentslide[whichtable]=whichpic; 
+	maxslides[whichtable]=amount; 
+	
+	slide = window.slide || new Array(maxslides[whichtable]+1); 
+	slide[whichtable]=new Array();
+	for(var n=1;n<=maxslides[whichtable];n++) { 
+		slide[whichtable][n]=path+n+'.jpg'; 	
+	} 
+	if (document.getElementById) {
+		document.getElementById('placeholder'+whichtable).src = slide[whichtable][currentslide[whichtable]];
+		document.getElementById('placeholder'+whichtable).height = "480";
+		return false;
+	} else {
+		return true;
+	}
+	focus();
+}
+
+function showPic_top (path,whichpic,amount,whichtable) {
+	location="#mytop";
+	scroll(0,0);
+	currentslide = window.currentslide || new Array(); 
+	maxslides = window.maxslides || new Array();
+	currentslide[whichtable]=whichpic; 
+	maxslides[whichtable]=amount; 
+	
+	slide = window.slide || new Array(maxslides[whichtable]+1); 
+	slide[whichtable]=new Array();
+	for(var n=1;n<=maxslides[whichtable];n++) { 
+		slide[whichtable][n]=path+n+'.jpg'; 	
+	} 
+	if (document.getElementById) {
+		document.getElementById('placeholder'+whichtable).src = slide[whichtable][currentslide[whichtable]];
+		return false;
+	} else {
+		return true;
+	}
+	//href = "#mytop";
+	
+	focus();
+}
+function shownextPic (path, whichtable,amount){
+	//alert (whichtable+ " | "+maxslides[whichtable]+" | "+currentslide[whichtable]+" | " + slide);
+	//alert (path);
+	currentslide = window.currentslide || new Array(); 
+	maxslides = window.maxslides || new Array();
+	currentslide[whichtable] = window.currentslide[whichtable] || 1; 
+	maxslides[whichtable]=amount; 
+	
+	slide = window.slide || new Array(maxslides[whichtable]+1); 
+	slide[whichtable]=new Array();
+	
+	for(var n=1;n<=amount;n++) { 
+		slide[whichtable][n]=path+n+'.jpg'; 	
+	}
+	
+	currentslide[whichtable]=currentslide[whichtable]+1; 
+	if (currentslide[whichtable]>maxslides[whichtable]) currentslide[whichtable]=1;
+	
+	if (document.getElementById) {
+		document.getElementById('placeholder'+whichtable).src = slide[whichtable][currentslide[whichtable]];
+		//alert (slide[whichtable][currentslide[whichtable]]);
+		return false;
+	} else {
+		return true;
+	}
+}
+
+
+function showprevPic (path, whichtable){
+	//alert (whichtable+ " | "+maxslides[whichtable]+" | "+currentslide[whichtable]+" | " + slide);
+	//alert (path);
+	currentslide[whichtable]=currentslide[whichtable]-1; 
+	if (currentslide[whichtable]==0) currentslide[whichtable]=maxslides[whichtable]-1;
+	
+	if (document.getElementById) {
+		document.getElementById('placeholder'+whichtable).src = slide[whichtable][currentslide[whichtable]];
+		//alert (slide[whichtable][currentslide[whichtable]]);
+		return false;
+	} else {
+		return true;
+	}
+}
+
+function english_cookie() {
+	var d = new Date();
+	d.setTime(d.getTime()+(100*24*60*60*1000));
+	document.cookie = 'lang=en;path=/;expires='+d.toGMTString()+';';
+}
+function dutch_cookie() {
+	var d = new Date();
+	d.setTime(d.getTime()+(100*24*60*60*1000));; //Expire after 100 days
+	document.cookie = 'lang=nl;path=/;expires='+d.toGMTString()+';';
+}
+
+
+function setCookie(name,value,days) {
+
+	if (days) {
+		var date = new Date();
+		date.setTime(date.getTime()+(days*24*60*60*1000));
+		var expires = ";expires="+date.toGMTString();
+	} else {
+		expires = "";
+	}	
+	document.cookie = name+"="+value+expires+";path=/";	
+}
+
+function cookie_link (link, cookie_name, cookie_value){
+	setCookie(cookie_name, cookie_value,365);
+	window.location = link;
+}
+
+function readCookie(name) {
+	var needle = name + "=";
+	var cookieArray = document.cookie.split(';');
+	for(var i=0;i <cookieArray.length;i++) {
+		var pair = cookieArray[i];
+		while (pair.charAt(0)==' ') {
+			pair = pair.substring(1, pair.length);
+		}
+		if (pair.indexOf(needle) == 0) {
+			return pair.substring(needle.length, pair.length);
+		}
+	}
+	return null;
+}
+
+
+
+function toggle_div(id) {
+	var e = document.getElementById(id);
+   if(e.style.display == 'block'){
+	  e.style.display = 'none'; 
+   }
+   else{
+	  e.style.display = 'block';
+	}
+}
+
+function toggle(id,id2) {
+	var e = document.getElementById(id);
+   if(e.style.display == 'block'){
+	  e.style.display = 'none'; 
+	  document.getElementById(id2).src ='/media/pics/arrow1.gif';
+   }
+   else{
+	  e.style.display = 'block';
+	  document.getElementById(id2).src ='/media/pics/arrow2.gif';
+	}
+}
+
+// this is for the flashing type in firefox
+(function(){
+  // if firefox 3.5+, hide content till load (or 3 seconds) to prevent FOUC
+  var d = document, e = d.documentElement, s = d.createElement('style');
+  if (e.style.MozTransform === ''){ // gecko 1.9.1 inference
+    s.textContent = 'body{visibility:hidden}';
+    e.firstChild.appendChild(s);
+    function f(){ s.parentNode && s.parentNode.removeChild(s); }
+    addEventListener('load',f,false);
+    setTimeout(f,3000); 
+  }
+})();
+
+
+function slideSwitch() {
+    var $active = $('#slideshow IMG.active');
+
+    if ( $active.length == 0 ) $active = $('#slideshow IMG:last');
+
+    // use this to pull the images in the order they appear in the markup
+    var $next =  $active.next().length ? $active.next()
+        : $('#slideshow IMG:first');
+
+    // uncomment the 3 lines below to pull the images in random order
+    
+    // var $sibs  = $active.siblings();
+    // var rndNum = Math.floor(Math.random() * $sibs.length );
+    // var $next  = $( $sibs[ rndNum ] );
+
+
+    $active.addClass('last-active');
+
+    $next.css({opacity: 0.0})
+        .addClass('active')
+        .animate({opacity: 1.0}, 1000, function() {
+            $active.removeClass('active last-active');
+        });
+}
+
+$(function() {
+    setInterval( "slideSwitch()", 5000 );
+});
+
+// this is for addthis trackback
+var addthis_config = {
+    data_track_clickback: true
+}
+	
+	//var $j = jQuery.noConflict();
+	$(document).ready(function() {
+		
+		$('body img[tooltip]').each(function(){
+        	$(this).qtip({
+            	content: $(this).attr('tooltip'), // Use the tooltip attribute of the element for the content
+            	style: {
+			        classes: 'qtip-tipsy qtip-shadow qtip-rounded'
+			    },
+				position: {
+            		target: 'mouse', // Track the mouse as the positioning target
+            		adjust: { x: 15, y: 15 } // Offset it slightly from under the mouse
+         		}
+        	});
+    	});
+    	
+		$('a.gwtooltip').each(function(){
+        	$(this).qtip({
+            	content: {
+					text: $(this).next('.tooltiptext') 
+				},
+				style: {
+			        classes: 'qtip-tipsy qtip-shadow qtip-rounded'
+			    },
+				position: {
+				        at: 'bottom right'
+				}
+        	});
+    	});	
+	});
+
+
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-1105442-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+
+
+/*
+==============
+Shortcut keys for debugging
+==============
+
+
+document.addEventListener('keydown', function(event) {
+	//alert (event.keyCode);
+	if(event.keyCode == 37) {
+        // left was pressed
+		var link = $('#prev_exhibition').attr('href');
+		if (link != undefined) window.location = link;
+    }
+	if(event.keyCode == 65) { //38 is up, 65 = A
+        // up was pressed
+		var link = $('.exhibition_link.b').prev('.exhibition_link').find('a').attr('href');
+		if (link == undefined) {
+			link = $('.exhibition_link').last().find('a').attr('href');
+		}
+		if (link != undefined) window.location = link;
+    }
+    else if(event.keyCode == 39) {
+        // right was pressed
+		var link = $('#next_exhibition').attr('href');
+		if (link != undefined) window.location = link;
+    }
+	if(event.keyCode == 83) { //40 is down, 90 = Z
+        // down was pressed
+		var link = $('.exhibition_link.b').next('.exhibition_link').find('a').attr('href');
+		if (link == undefined) {
+			link = $('.exhibition_link').first().find('a').attr('href');
+		}
+		if (link != undefined) window.location = link;
+
+    }
+});
+
+*/
+
+	
