@@ -15,33 +15,6 @@ from mutagen.flac import FLAC
 #from mutagen.id3 import ID3, APIC, ID3NoHeaderError
 #from mutagen.mp3 import MP3 
 
-""" Initialize Audacity mod-script-pipe connection: """
-if sys.platform == 'win32':
-    #print("Initializing mod-script-pipe connection on Windows.")
-    TONAME = '\\\\.\\pipe\\ToSrvPipe'
-    FROMNAME = '\\\\.\\pipe\\FromSrvPipe'
-    EOL = '\r\n\0'
-else:
-    print("Initializing mod-script-pipe connection on Linux or MAC.")
-    TONAME = '/tmp/audacity_script_pipe.to.' + str(os.getuid())
-    FROMNAME = '/tmp/audacity_script_pipe.from.' + str(os.getuid())
-    EOL = '\n'
-
-""" Audacity mod-script-pipe setup: """
-print("Write to  \"" + TONAME +"\"")
-if not os.path.exists(TONAME):
-    print(" ..does not exist.  Ensure Audacity is running with mod-script-pipe.")
-    sys.exit()
-print("Read from \"" + FROMNAME +"\"")
-if not os.path.exists(FROMNAME):
-    print(" ..does not exist.  Ensure Audacity is running with mod-script-pipe.")
-    sys.exit()
-print("-- Both pipes exist.  Good.")
-TOFILE = open(TONAME, 'w')
-print("-- File to write to has been opened")
-FROMFILE = open(FROMNAME, 'rt')
-print("-- File to read from has now been opened too\r\n")
-
 """ Audacity mod-script-pipe functions: """
 def do_command(command):
     """ Send one command, and return the response. """
@@ -49,11 +22,13 @@ def do_command(command):
     response = get_response()
     #print("Rcvd: <<< \n" + response)
     return response
+
 def send_command(command):
     """Send a single command."""
     #print("Send: >>> \n"+command)
     TOFILE.write(command + EOL)
     TOFILE.flush()
+
 def get_response():
     """Return the command response."""
     result = ''
@@ -63,7 +38,7 @@ def get_response():
         line = FROMFILE.readline()
     return result
 
-""" Helper functions: """
+""" bin2dig functions: """
 def begin_bin2dig(flags):
     print("~~ bin2dig ~~ flags = ", flags)
     
@@ -91,7 +66,6 @@ def begin_bin2dig(flags):
         outputFormatIndex = flags.index('-f')
         outputFormat = flags[outputFormatIndex+1]
         
-
     #export Audacity tracks
     print("outputFilepath = ", outputFilepath)
     print("outputFormat = ", outputFormat)
@@ -191,7 +165,6 @@ def renderAudacityTracks(metadataInput, outputLocation, outputFormat):
              audio = mutagen.File(outputFileLocation, easy=True)   
             ''' 
         
-
 def slugify(value):
     """
     Remove any chars from string that arent english characters or numbers
@@ -250,7 +223,6 @@ def getDiscogsTags(discogsURL):
     metadataTags = {'album':albumTitle, 'artist':artistString, 'year':releaseDate, 'tracks':tracks }    
     return metadataTags
 
-
 def getManualTags(debug):
     metadataTags = {}
     if debug:
@@ -274,8 +246,83 @@ def getManualTags(debug):
 
     return metadataTags
 
+def setupAudacityPipeline():
+    """ Initialize Audacity mod-script-pipe connection: """
+    if sys.platform == 'win32':
+        #print("Initializing mod-script-pipe connection on Windows.")
+        TONAME = '\\\\.\\pipe\\ToSrvPipe'
+        FROMNAME = '\\\\.\\pipe\\FromSrvPipe'
+        EOL = '\r\n\0'
+    else:
+        print("Initializing mod-script-pipe connection on Linux or MAC.")
+        TONAME = '/tmp/audacity_script_pipe.to.' + str(os.getuid())
+        FROMNAME = '/tmp/audacity_script_pipe.from.' + str(os.getuid())
+        EOL = '\n'
 
-""" Begin script: """
+    """ Audacity mod-script-pipe setup: """
+    print("Write to  \"" + TONAME +"\"")
+    if not os.path.exists(TONAME):
+        print(" ..does not exist.  Ensure Audacity is running with mod-script-pipe.")
+        sys.exit()
+    print("Read from \"" + FROMNAME +"\"")
+    if not os.path.exists(FROMNAME):
+        print(" ..does not exist.  Ensure Audacity is running with mod-script-pipe.")
+        sys.exit()
+    print("-- Both pipes exist.  Good.")
+    TOFILE = open(TONAME, 'w')
+    print("-- File to write to has been opened")
+    FROMFILE = open(FROMNAME, 'rt')
+    print("-- File to read from has now been opened too\r\n")
+
+""" general utility functions """
+def getFlagValues(flags, flagString, numberOfValues):
+    flagValues = []
+    flagIndex = flags.index(flagString)
+    for i in range(1, numberOfValues+1):
+        flagValue = flags[flagIndex+i]
+        flagValues.append(flagValue)
+    print("flagValues = ", flagValues)
+    return flagValues
+
+""" dig2vid functions: """
+def begin_dig2vid(flags):
+    #audio / songs input
+
+    #set default args
+    outputFilename = None
+    outputResolution = "1920:1080"
+    imgFilepath = None
+
+    if '-test' in sys.argv:
+        #test your ffmpeg installation
+        print("You should see the 'ffmpeg version' command output, if you have ffmpeg installed correctly then it will output something like 'ffmpeg version x.x.x...'. If you don't see this then install ffmpeg with 'sudo apt-get install ffmpeg'. \n\n ")
+        os.system('ffmpeg -version')   
+
+    if '-song' in sys.argv:
+        #get first value after '-songs' string in flags
+        audioValue = getFlagValues(flags, '-song', 1)
+
+        #get image
+        imageValues = getFlagValues(flags, '-img', 2)
+        #get necessary flags [audioSource, imgSource, output, resolution,]
+        #render song
+
+    #if '-songs' in sys.argv:
+        #for each song in source folder
+            #get necesary flags
+            #render song
+
+    #if '-fullAlbum' in sys.argv:
+
+        
+
+
+    #if "-audio" in sys.argv:
+    #    audioIndex = flags.index('-i')
+    #    audioValue = flags[audioIndex+1]
+    #    print("audio = ", audioValue)
+
+""" package initialization setup: """
 if '-bin2dig' or '-dig2vid' in sys.argv:
     #set default indexes
     bin2digIndex = len(sys.argv)
@@ -286,6 +333,7 @@ if '-bin2dig' or '-dig2vid' in sys.argv:
 
     #get flags / args for bin2dig or dig2vid
     if '-bin2dig' in sys.argv:
+        setupAudacityPipeline()
         bin2digStartIndex = sys.argv.index('-bin2dig')
         argsSplice1 = sys.argv[bin2digStartIndex:len(sys.argv)]
         if '-dig2vid' in argsSplice1:
@@ -305,7 +353,7 @@ if '-bin2dig' or '-dig2vid' in sys.argv:
         else:
             dig2vidFlags = argsSplice1[0:len(argsSplice1)]
         #execute flags
-        #begin_dig2vid(dig2vidFlags)
+        begin_dig2vid(dig2vidFlags)
 
 if '-t' in sys.argv:
     print("Test Audacity mod-script-pipe connection:")
