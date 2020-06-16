@@ -16,12 +16,35 @@ from mutagen.flac import FLAC
 #from mutagen.mp3 import MP3 
 
 """ Audacity mod-script-pipe functions: """
-def do_command(command):
-    """ Send one command, and return the response. """
-    send_command(command)
-    response = get_response()
-    #print("Rcvd: <<< \n" + response)
-    return response
+
+#startup audacity pipe commands
+if sys.platform == 'win32':
+    print("pipe-test.py, running on windows")
+    TONAME = '\\\\.\\pipe\\ToSrvPipe'
+    FROMNAME = '\\\\.\\pipe\\FromSrvPipe'
+    EOL = '\r\n\0'
+else:
+    print("pipe-test.py, running on linux or mac")
+    TONAME = '/tmp/audacity_script_pipe.to.' + str(os.getuid())
+    FROMNAME = '/tmp/audacity_script_pipe.from.' + str(os.getuid())
+    EOL = '\n'
+
+print("Write to  \"" + TONAME +"\"")
+if not os.path.exists(TONAME):
+    print(" ..does not exist.  Ensure Audacity is running with mod-script-pipe.")
+    sys.exit()
+
+print("Read from \"" + FROMNAME +"\"")
+if not os.path.exists(FROMNAME):
+    print(" ..does not exist.  Ensure Audacity is running with mod-script-pipe.")
+    sys.exit()
+
+print("-- Both pipes exist.  Good.")
+
+TOFILE = open(TONAME, 'w')
+print("-- File to write to has been opened")
+FROMFILE = open(FROMNAME, 'rt')
+print("-- File to read from has now been opened too\r\n")
 
 def send_command(command):
     """Send a single command."""
@@ -38,6 +61,13 @@ def get_response():
         line = FROMFILE.readline()
     return result
 
+def do_command(command):
+    """ Send one command, and return the response. """
+    send_command(command)
+    response = get_response()
+    #print("Rcvd: <<< \n" + response)
+    return response
+
 """ bin2dig functions: """
 def begin_bin2dig(flags):
     print("~~ bin2dig ~~ flags = ", flags)
@@ -49,7 +79,6 @@ def begin_bin2dig(flags):
         if inputValueIndex == 'discogs':
             discogsCode = inputValueIndex = flags[inputIndex+2]
             metadataInput = getDiscogsTags(discogsCode)
-            print
 
         elif inputValueIndex == 'manual':
             metadataInput = getManualTags(True)
@@ -72,8 +101,10 @@ def begin_bin2dig(flags):
     renderAudacityTracks(metadataInput, outputFilepath, outputFormat)
 
 def renderAudacityTracks(metadataInput, outputLocation, outputFormat):
+    print("render() metadataInput = ", metadataInput)
     #render each track in tracks
-    for i in range(1, len(metadataInput["tracks"])):
+    for i in range(0, len(metadataInput["tracks"])):
+        print("i = ", i, ", max = ", len(metadataInput["tracks"]))
         title = metadataInput["tracks"][i]
         artist = metadataInput["artist"]
         album = metadataInput["album"]
@@ -89,7 +120,7 @@ def renderAudacityTracks(metadataInput, outputLocation, outputFormat):
                 os.makedirs(outputLocation)
                 print('directory created')
 
-            outputFileLocation = outputLocation + '\\' + str(i) + '. ' + title + "." + outputFormat 
+            outputFileLocation = outputLocation + '\\' + str(i+1) + '. ' + title + "." + outputFormat 
         else:
             print('mac/linux option outputfile')
             #if outputLocation folder doesn't exist, create it
@@ -122,7 +153,7 @@ def renderAudacityTracks(metadataInput, outputLocation, outputFormat):
             #year
             audio['date'] = year
             #trackNumber
-            audio['tracknumber'] = str(i)
+            audio['tracknumber'] = str(i+1)
             audio.save()
             
 
@@ -246,34 +277,6 @@ def getManualTags(debug):
 
     return metadataTags
 
-def setupAudacityPipeline():
-    """ Initialize Audacity mod-script-pipe connection: """
-    if sys.platform == 'win32':
-        #print("Initializing mod-script-pipe connection on Windows.")
-        TONAME = '\\\\.\\pipe\\ToSrvPipe'
-        FROMNAME = '\\\\.\\pipe\\FromSrvPipe'
-        EOL = '\r\n\0'
-    else:
-        print("Initializing mod-script-pipe connection on Linux or MAC.")
-        TONAME = '/tmp/audacity_script_pipe.to.' + str(os.getuid())
-        FROMNAME = '/tmp/audacity_script_pipe.from.' + str(os.getuid())
-        EOL = '\n'
-
-    """ Audacity mod-script-pipe setup: """
-    print("Write to  \"" + TONAME +"\"")
-    if not os.path.exists(TONAME):
-        print(" ..does not exist.  Ensure Audacity is running with mod-script-pipe.")
-        sys.exit()
-    print("Read from \"" + FROMNAME +"\"")
-    if not os.path.exists(FROMNAME):
-        print(" ..does not exist.  Ensure Audacity is running with mod-script-pipe.")
-        sys.exit()
-    print("-- Both pipes exist.  Good.")
-    TOFILE = open(TONAME, 'w')
-    print("-- File to write to has been opened")
-    FROMFILE = open(FROMNAME, 'rt')
-    print("-- File to read from has now been opened too\r\n")
-
 """ general utility functions """
 def getFlagValues(flags, flagString, numberOfValues):
     flagValues = []
@@ -333,7 +336,7 @@ if '-bin2dig' or '-dig2vid' in sys.argv:
 
     #get flags / args for bin2dig or dig2vid
     if '-bin2dig' in sys.argv:
-        setupAudacityPipeline()
+        #setupAudacityPipeline()
         bin2digStartIndex = sys.argv.index('-bin2dig')
         argsSplice1 = sys.argv[bin2digStartIndex:len(sys.argv)]
         if '-dig2vid' in argsSplice1:
