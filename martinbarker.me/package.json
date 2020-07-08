@@ -4,13 +4,19 @@
   "description": "personal website",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "docker build -t alien35/node-web-app .",
+    "startd": "docker run -p 49160:8080 -d alien35/node-web-app",
+    "open": "open http://localhost:49160",
+    "go": "npm run build && npm run startd && docker ps"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "express-handlebars": "^4.0.4",
+    "fluent-ffmpeg": "^2.1.2",
     "handlebars": "^4.7.6"
   }
 }

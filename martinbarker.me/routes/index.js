@@ -1,6 +1,16 @@
 var express = require('express');
 var router = express.Router();
 
+//new home route
+router.get('/newHome', (req, res) => {
+  res.render('newhome', {  //home
+      layout : 'newHomeindex',  //index
+      pageTitle: 'Martin Barker', 
+      icon: '/static/assets/img/home.png', 
+      homePage:'active',
+  });
+});
+
 //home page route
 router.get('/', (req, res) => {
     res.render('home', {

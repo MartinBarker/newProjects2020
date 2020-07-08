@@ -62,6 +62,7 @@ def get_response():
     return result
 
 def do_command(command):
+    print("do_command() command = ", command )
     """ Send one command, and return the response. """
     send_command(command)
     response = get_response()
@@ -72,6 +73,10 @@ def do_command(command):
 def begin_bin2dig(flags):
     print("~~ bin2dig ~~ flags = ", flags)
     
+    if '-t' in flags:
+        do_command(r'Export2: Mode=Selection Filename="C:\Users\marti\Documents\martinradio\uploads\zxc.flac" NumChannels=2')
+        #renderAudacityTracks(metadataInput, outputLocation, outputFormat):
+
     #get input metadata object {}
     if '-i' in flags:
         inputIndex = flags.index('-i')
@@ -83,22 +88,23 @@ def begin_bin2dig(flags):
         elif inputValueIndex == 'manual':
             metadataInput = getManualTags(True)
 
-    #choose output filepath
-    outputFilepath = ""
-    if '-o' in flags:
-        outputFilepathIndex = flags.index('-o')
-        outputFilepath = flags[outputFilepathIndex+1]
-    
     #get output format
     outputFormat = ""
     if '-f' in flags:
         outputFormatIndex = flags.index('-f')
         outputFormat = flags[outputFormatIndex+1]
-        
-    #export Audacity tracks
-    print("outputFilepath = ", outputFilepath)
-    print("outputFormat = ", outputFormat)
-    renderAudacityTracks(metadataInput, outputFilepath, outputFormat)
+
+    #choose output filepath
+    outputFilepath = ""
+    if '-o' in flags:
+        outputFilepathIndex = flags.index('-o')
+        outputFilepath = flags[outputFilepathIndex+1]
+        #export Audacity tracks
+        print("outputFilepath = ", outputFilepath)
+        print("outputFormat = ", outputFormat)
+        renderAudacityTracks(metadataInput, outputFilepath, outputFormat)
+    
+
 
 def renderAudacityTracks(metadataInput, outputLocation, outputFormat):
     print("render() metadataInput = ", metadataInput)
@@ -130,9 +136,10 @@ def renderAudacityTracks(metadataInput, outputLocation, outputFormat):
             outputFileLocation = outputLocation + '' + title + "." + outputFormat 
         
         outputFileLocation = os.path.abspath(outputFileLocation)
-        print("Rendering file to ", outputFileLocation)
+        #print("Rendering file to ", outputFileLocation)
         renderCommand = 'Export2: Mode=Selection Filename="' + outputFileLocation + '" NumChannels=2 '
         cmdResult = do_command(renderCommand)
+        print("cmdResult = ", cmdResult)
 
         #file should be rendered, so now begin tagging process
         if outputFormat == 'flac':
@@ -336,6 +343,7 @@ if '-bin2dig' or '-dig2vid' in sys.argv:
 
     #get flags / args for bin2dig or dig2vid
     if '-bin2dig' in sys.argv:
+        print("trigger bin2dig")
         #setupAudacityPipeline()
         bin2digStartIndex = sys.argv.index('-bin2dig')
         argsSplice1 = sys.argv[bin2digStartIndex:len(sys.argv)]
@@ -345,6 +353,7 @@ if '-bin2dig' or '-dig2vid' in sys.argv:
         else:
             bin2digFlags = argsSplice1[0:len(argsSplice1)]
         #execute flags
+        
         begin_bin2dig(bin2digFlags)
 
     if '-dig2vid' in sys.argv:
