@@ -1,23 +1,35 @@
 var express = require('express');
 var router = express.Router();
 
-//new home route
+//new home routes
 router.get('/newHome', (req, res) => {
-  res.render('newhome', {  //home
-      layout : 'newHomeindex',  //index
-      pageTitle: 'Martin Barker', 
+  res.render('newhome', {  //page specific body contents 
+      layout : 'newHomeindex',  //index [outside generic code: navbar/ads/SEO/accessibility]
+      pageTitle: 'tagger.site', 
       icon: '/static/assets/img/home.png', 
       homePage:'active',
   });
 });
+
+//new tagger home route
+router.get('/newHome/tagger', (req, res) => {
+  res.render('newtagger', {
+    layout : 'newHomeindex', 
+    pageTitle: 'tagger.site',
+    projectsTab:'active',
+    icon: 'https://cdn4.iconfinder.com/data/icons/48-bubbles/48/06.Tags-512.png'
+  });
+});
+// default normal routes
 
 //home page route
 router.get('/', (req, res) => {
     res.render('home', {
         layout : 'index', 
         pageTitle: 'martinbarker.me', 
-        icon: '/static/assets/img/home.png', 
-        homePage:'active',
+        icon: 'https://cdn4.iconfinder.com/data/icons/48-bubbles/48/06.Tags-512.png', 
+        expandProjects: 'active',
+        activeTagger: 'active'
     });
 });
 
