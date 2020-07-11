@@ -17,6 +17,7 @@
     "express": "^4.17.1",
     "express-handlebars": "^4.0.4",
     "fluent-ffmpeg": "^2.1.2",
-    "handlebars": "^4.7.6"
+    "handlebars": "^4.7.6",
+    "node-vibrant": "^3.1.5"
   }
 }

@@ -28,6 +28,87 @@
 
 </head>
 
+<div id='customCss'>
+
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        init()
+
+        async function init(){
+            let colors = await getColors()
+            console.log("colors = ", colors)
+
+            setPageColors(colors)
+        }
+
+        //side bar collapse event
+        $('#sidebarCollapse').on('click', function () {
+            $('#sidebar').toggleClass('active');
+        });
+
+    });
+
+    //set page colors
+    function setPageColors(colors){
+        /* 
+        Vibrant
+        LightVibrant
+        DarkVibrant
+        Muted
+        LightMuted
+        DarkMuted
+        */
+        //color1: background color
+        document.body.style.backgroundColor = `${colors.colors['Vibrant']}`;
+        //color2: sidebar background
+        document.getElementById('sidebar').style.background =`${colors.colors['LightVibrant']}`;
+        //color3: navbar hover selection
+
+        //color4: active sidebar
+        document.getElementById('currentPage').style.background = `${colors.colors['Vibrant']}`;
+    
+        let liElements = document.getElementById("sidebar").getElementsByTagName("li")
+        for(var i = 0; i < liElements.length; i++){
+            liElements[i].style.background = `${colors.colors['LightMuted']}`;
+        }
+
+        //
+        //var style = document.createElement('style');
+        //style.type = 'text/css';
+        //style.innerText = '#sidebar ul li a:hover { color: #000; background: "red"; /* hover tab color */ }';
+        document.getElementById('customCss').innerText = `<style> #sidebar ul li a:hover { color: #000; background: "red"; /* hover tab color */ } </style>`
+
+        //var css = 
+        //var style = document.createElement('style');
+        //style.appendChild(document.createTextNode(css));
+
+        //document.getElementsByTagName('head')[0].appendChild(style);
+        //
+        
+    
+    }
+
+    //make request to colors backend
+    function getColors(){
+        return new Promise(async function (resolve, reject) {
+            $.ajax({
+                type: 'POST',
+                url: '/getColors',
+                data: {
+                    type: "varValue",
+                },
+            }).then((data) => {
+                resolve(data)
+            }).catch((err) => {
+                reject(err)
+            });
+        })
+    }
+
+</script>
+
 <!-- Style -->
 <style>
 @import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
@@ -129,15 +210,16 @@ a:focus {
     display: block;
 }
 
-.currentPage, .currentPage *{
-    background: #bed6b8 !important;
+#currentPage {
+    background: white;
 }
 
-
+/* Hover Tab Color
 #sidebar ul li a:hover {
     color: #000;
-    background: #8FC1E3; /* hover tab color */
+    background: #8FC1E3; 
 }
+*/
 
 #sidebar ul li.active>a,
 a[aria-expanded="true"] {
@@ -221,14 +303,6 @@ ul.CTAs a {
 
 </style>
 
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('#sidebarCollapse').on('click', function () {
-            $('#sidebar').toggleClass('active');
-        });
-});
-</script>
-
 <!-- Page Content -->
 <div class="wrapper" class="toggled">
     <!-- Sidebar  -->
@@ -239,25 +313,17 @@ ul.CTAs a {
         </div>
 
         <ul class="list-unstyled components">
-            <li class="currentPage" >
+            <li  >
                 <a href="#" >Home</a>
             </li>
             <li>
                 <a href="#">About</a>
             </li>
             <li>
-                <a href="#projectsSubmenu" data-toggle="collapse" 
-                
-                 {{#if projectsTab desired="active" type=type}}
-                    aria-expanded="true"
-                {{else}}
-                    aria-expanded="false"
-                {{/if}}
-                
-                 class="dropdown-toggle">Projects</a>
-                <ul class="collapse list-unstyled" id="projectsSubmenu">
-                    <li class='currentPage'>
-                        <a href="#">tagger.site</a>
+                <a href="#projectsSubmenu" data-toggle="collapse" class="dropdown-toggle ">Projects</a>
+                <ul class="collapse list-unstyled show " id="projectsSubmenu">
+                    <li >
+                        <a id='currentPage' href="#">tagger.site</a>
                     </li>
                     <li>
                         <a href="#">discogstagger.site</a>

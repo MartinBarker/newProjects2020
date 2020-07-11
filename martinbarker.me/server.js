@@ -1,20 +1,11 @@
 //setup express app
 const express = require('express');
 const app = express();
+var router = express.Router();
+
+//port and hosting info
 const port = 3000;
-var path = require('path')
-
-var cors = require('cors')
-app.use(cors())
-var fmpeg = require('fluent-ffmpeg')
 var host = '0.0.0.0';
-
-//set cors for all routes 
-app.use('/', function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "X-Requested-With");
-    next();
-});
 
 //Loads the handlebars module
 const handlebars = require('express-handlebars');
@@ -72,8 +63,6 @@ app.engine('handlebars', handlebars({
 
 //Tells app to use '/public' folder for static files
 app.use(express.static('public'))
-//var path = require('path')
-//app.use(express.static(path.join(__dirname, '/static/')));
 
 //connect all routes
 const routes = require('./routes');

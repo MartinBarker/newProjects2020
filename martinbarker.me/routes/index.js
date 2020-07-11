@@ -1,5 +1,67 @@
-var express = require('express');
+const express = require('express');
+const app = express();
 var router = express.Router();
+
+
+//tagger.site route
+app.get('/tagger', function (req, res) {
+  res.render('newtagger', {
+      layout : 'newHomeindex', 
+      pageTitle: 'tagger.site',
+      projectsTab:'active',
+      icon: 'https://cdn4.iconfinder.com/data/icons/48-bubbles/48/06.Tags-512.png'
+    });
+})
+
+// ES5
+var Vibrant = require('node-vibrant')
+
+app.post('/getColors', async function(req, res){
+  //let filepath = req.body.filepath
+  console.log("/getColors route " )
+
+  let imgPath = 'static/assets/aesthetic-images/theylive.jpg'
+
+  //get color swatches
+  var swatches = await Vibrant.from(imgPath).getPalette()
+  //format rbg and swatch type into list
+  let colors = {}
+  for (const [key, value] of Object.entries(swatches)) {
+    //get colorValue
+    let colorValue = value.rgb
+    colorValue = `rgb(${colorValue.toString()})`
+    //add colorName:colorValue to object
+    var keyName = `${key}`
+    colors[keyName] = colorValue
+  }
+  res.send({colors})
+});
+
+module.exports = app;
+
+
+/*
+router.get('/newHome/tagger', function(req, res) {
+  res.render('newtagger', {
+    layout : 'newHomeindex', 
+    pageTitle: 'tagger.site',
+    projectsTab:'active',
+    icon: 'https://cdn4.iconfinder.com/data/icons/48-bubbles/48/06.Tags-512.png'
+  });
+})
+
+
+*/
+
+
+//app.use(router);
+//app.listen(3000);
+
+//app.post('/getColors', function (req, res) {
+ // res.send('about')
+//})
+
+/*
 
 //new home routes
 router.get('/newHome', (req, res) => {
@@ -20,7 +82,7 @@ router.get('/newHome/tagger', (req, res) => {
     icon: 'https://cdn4.iconfinder.com/data/icons/48-bubbles/48/06.Tags-512.png'
   });
 });
-// default normal routes
+
 
 //home page route
 router.get('/', (req, res) => {
@@ -53,6 +115,8 @@ router.get('/discogstagger',function(req, res){
     });
   });
 
+*/
+
 /*
 //projects page
 router.get('/projects', (req, res) => {
@@ -71,4 +135,3 @@ router.get("/url", (req, res, next) => {
     res.json(["Tony","Lisa","Michael","Ginger","Food"]);
 });
 */
-module.exports = router;
