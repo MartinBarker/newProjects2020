@@ -28,87 +28,6 @@
 
 </head>
 
-<div id='customCss'>
-
-</div>
-
-<script type="text/javascript">
-    $(document).ready(function () {
-        init()
-
-        async function init(){
-            let colors = await getColors()
-            console.log("colors = ", colors)
-
-            setPageColors(colors)
-        }
-
-        //side bar collapse event
-        $('#sidebarCollapse').on('click', function () {
-            $('#sidebar').toggleClass('active');
-        });
-
-    });
-
-    //set page colors
-    function setPageColors(colors){
-        /* 
-        Vibrant
-        LightVibrant
-        DarkVibrant
-        Muted
-        LightMuted
-        DarkMuted
-        */
-        //color1: background color
-        document.body.style.backgroundColor = `${colors.colors['Vibrant']}`;
-        //color2: sidebar background
-        document.getElementById('sidebar').style.background =`${colors.colors['LightVibrant']}`;
-        //color3: navbar hover selection
-
-        //color4: active sidebar
-        document.getElementById('currentPage').style.background = `${colors.colors['Vibrant']}`;
-    
-        let liElements = document.getElementById("sidebar").getElementsByTagName("li")
-        for(var i = 0; i < liElements.length; i++){
-            liElements[i].style.background = `${colors.colors['LightMuted']}`;
-        }
-
-        //
-        //var style = document.createElement('style');
-        //style.type = 'text/css';
-        //style.innerText = '#sidebar ul li a:hover { color: #000; background: "red"; /* hover tab color */ }';
-        document.getElementById('customCss').innerText = `<style> #sidebar ul li a:hover { color: #000; background: "red"; /* hover tab color */ } </style>`
-
-        //var css = 
-        //var style = document.createElement('style');
-        //style.appendChild(document.createTextNode(css));
-
-        //document.getElementsByTagName('head')[0].appendChild(style);
-        //
-        
-    
-    }
-
-    //make request to colors backend
-    function getColors(){
-        return new Promise(async function (resolve, reject) {
-            $.ajax({
-                type: 'POST',
-                url: '/getColors',
-                data: {
-                    type: "varValue",
-                },
-            }).then((data) => {
-                resolve(data)
-            }).catch((err) => {
-                reject(err)
-            });
-        })
-    }
-
-</script>
-
 <!-- Style -->
 <style>
 @import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
@@ -116,7 +35,6 @@
 
 body {
     font-family: 'Poppins', sans-serif;
-    background: #ffffff;
 }
 
 p {
@@ -143,7 +61,7 @@ a:focus {
 
 .navbar {
     padding: 15px 10px;
-    background: #fff;
+    /* background: rgb(11, 223, 212); */
     border: none;
     border-radius: 0;
     margin-bottom: 40px;
@@ -177,7 +95,7 @@ a:focus {
 #sidebar {
     min-width: 250px;
     max-width: 250px;
-    background: #f7f9fb; /* NAVBAR BACKGROUND */
+    /*  background: #63c23e; NAVBAR BACKGROUND */
     color: rgb(0, 0, 0);
     transition: all 0.3s;
 }
@@ -209,11 +127,11 @@ a:focus {
     font-size: 1.1em;
     display: block;
 }
-
+/*
 #currentPage {
     background: white;
 }
-
+*/
 /* Hover Tab Color
 #sidebar ul li a:hover {
     color: #000;
@@ -221,10 +139,9 @@ a:focus {
 }
 */
 
-#sidebar ul li.active>a,
-a[aria-expanded="true"] {
+#sidebar ul li.active>a,a[aria-expanded="true"] {
     /* color: #fff; */
-    background: #f7f9fb; /* active tab */
+    /* background: #f7f9fb; active tab */
 }
 
 a[data-toggle="collapse"] {
@@ -242,7 +159,7 @@ a[data-toggle="collapse"] {
 ul ul a {
     font-size: 0.9em !important;
     padding-left: 30px !important;
-    background: #f7f9fb;    /* tab list color */
+    /* background: #f7f9fb;    tab list color */
 }
 
 ul.CTAs {
@@ -301,6 +218,14 @@ ul.CTAs a {
     position: absolute;
 }
 
+/* Bottom of sidebar image stuff */
+
+
+.responsive {
+    width: 90%;
+    bottom:20px;
+}
+
 </style>
 
 <!-- Page Content -->
@@ -308,11 +233,11 @@ ul.CTAs a {
     <!-- Sidebar  -->
     <nav id="sidebar">
 
-        <div class="sidebar-header">
-            <h3>Martin Barker</h3> <button id='sidebarCollapse'><img src="https://img.icons8.com/ios-filled/24/000000/menu.png"/></button> <!-- id='sidebutton' -->
+        <div id='sidebarTop' class="sidebar-header">
+            <h3 style='text-size:22px'>Martin Barker</h3> <button id='sidebarCollapse'><img src="https://img.icons8.com/ios-filled/24/000000/menu.png"/></button> <!-- id='sidebutton' -->
         </div>
 
-        <ul class="list-unstyled components">
+        <ul class="list-unstyled components sideBarOption">
             <li  >
                 <a href="#" >Home</a>
             </li>
@@ -372,6 +297,10 @@ ul.CTAs a {
             </li>
         </ul>
 
+        <div id='imageDetails' class='sidebar-footer'>
+            <img id='colorImageDisplay' class="responsive">
+        </div>
+
     </nav>
 
     <!-- Page Content -->
@@ -397,5 +326,78 @@ ul.CTAs a {
         {{{body}}}
     </div>
 </div>
+
+<script type="text/javascript">
+
+    setColors()
+
+    async function setColors(){
+        let colors = await getColors()
+        let imgPath = colors.imgPath
+        /* 
+        Vibrant
+        LightVibrant
+        DarkVibrant
+        Muted
+        LightMuted
+        DarkMuted
+        */
+
+        //change display image source
+        document.getElementById('colorImageDisplay').src=`${imgPath}`
+
+        var sheet = document.createElement('style')
+        let innerHTMLStyle = `
+        /* sidebar top background color */
+        #sidebarTop {background: ${colors.colors['LightMuted']};}
+
+        /* sidebar background color */
+        #sidebar { background: ${colors.colors['Vibrant']}; } 
+
+        /* active tab color */
+        #currentPage { background: ${colors.colors['LightVibrant']}; } 
+
+        /* main page body background color */
+        body { background: ${colors.colors['LightVibrant']}; } 
+
+       
+        /* ul ul a { expanded tab background color */
+        .sideBarOption { background: ${colors.colors['Muted']}; } 
+
+        /* sidebar hover color */
+        #sidebar ul li a:hover { background: ${colors.colors['DarkVibrant']}; } `;
+
+        console.log("innerHTMLStyle = ", innerHTMLStyle)
+        sheet.innerHTML = innerHTMLStyle 
+        document.head.appendChild(sheet);
+    }
+
+    $(document).ready(function () {
+
+        //side bar collapse event
+        $('#sidebarCollapse').on('click', function () {
+            $('#sidebar').toggleClass('active');
+        });
+
+    });
+
+    //make request to colors backend
+    function getColors(){
+        return new Promise(async function (resolve, reject) {
+            $.ajax({
+                type: 'POST',
+                url: '/getColors',
+                data: {
+                    type: "varValue",
+                },
+            }).then((data) => {
+                resolve(data)
+            }).catch((err) => {
+                reject(err)
+            });
+        })
+    }
+
+</script>
 
 </html>

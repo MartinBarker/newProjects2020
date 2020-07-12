@@ -20,7 +20,8 @@ app.post('/getColors', async function(req, res){
   //let filepath = req.body.filepath
   console.log("/getColors route " )
 
-  let imgPath = 'static/assets/aesthetic-images/theylive.jpg'
+  let randomImg = await getRandomImg('static/assets/aesthetic-images/')
+  let imgPath = `static/assets/aesthetic-images/${randomImg}`
 
   //get color swatches
   var swatches = await Vibrant.from(imgPath).getPalette()
@@ -34,8 +35,19 @@ app.post('/getColors', async function(req, res){
     var keyName = `${key}`
     colors[keyName] = colorValue
   }
-  res.send({colors})
+  res.send({colors:colors, imgPath:imgPath})
 });
+
+//helper functions
+function getRandomImg(path){
+  return new Promise(async function (resolve, reject){
+    var fs = require('fs');
+    var files = fs.readdirSync('static/assets/aesthetic-images/')
+    /* now files is an Array of the name of the files in the folder and you can pick a random name inside of that array */
+    let chosenFile = files[Math.floor(Math.random() * files.length)] 
+    resolve(chosenFile)
+  })
+}
 
 module.exports = app;
 
