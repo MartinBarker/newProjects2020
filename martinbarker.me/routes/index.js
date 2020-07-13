@@ -5,7 +5,8 @@ var router = express.Router();
 
 //tagger.site route
 app.get('/tagger', function (req, res) {
-  res.render('newtagger', {
+  console.log("/tagger")
+  res.render('newTagger', {
       layout : 'newHomeindex', 
       pageTitle: 'tagger.site',
       projectsTab:'active',

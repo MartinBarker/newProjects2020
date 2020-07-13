@@ -32,7 +32,6 @@
 <style>
 @import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
 
-
 body {
     font-family: 'Poppins', sans-serif;
 }
@@ -185,11 +184,14 @@ ul.CTAs a {
     }
 }
 
+#imageModal{
+    z-index:3;
+}
+
 /* Sidebar expand/collapse button */
-/* #sidebutton { */
 #sidebarCollapse{
     position: fixed;
-    z-index: 999;
+    z-index: 2;
     
     margin-left: 84%;
     box-shadow: 0px 1px 4px 1px rgba(0 ,0, 0, .3);
@@ -202,8 +204,6 @@ ul.CTAs a {
 }
 
 /* Bottom of sidebar image stuff */
-
-
 .responsive {
     width: 90%;
     bottom:20px;
@@ -211,10 +211,28 @@ ul.CTAs a {
     margin-right:5%;
 }
 
+/* image footer color text center */
+.sidebar-footer{
+text-align: center;
+font-size: 1.1rem;
+font-family:'Consolas'
+}
+
+/* image footer color boxes */
+.colorBox {
+  /*float: left;*/
+  width: 20px;
+  height: 20px;
+  margin: 5px;
+  border: 1px solid rgba(0, 0, 0, .2);
+  vertical-align: middle;
+  display: inline-block;
+}
+
 </style>
 
 <!-- Image Modal -->
-<div id="myModal" class="modal">
+<div id="imageModal" class="modal">
 
   <!-- The Close Button -->
   <span class="close">&times;</span>
@@ -377,8 +395,44 @@ ul.CTAs a {
             </li>
         </ul>
 
-        <div id='imageDetails' class='sidebar-footer'>
-            <img id='colorImageDisplay' style='display:none' class="responsive" alt='image alt descr'>
+        <div style='display:none' id="pageColorsText" class='sidebar-footer'>
+            <div class="sidebar-footer imageDetails">
+
+                <a class="imageDetailsText">Page colors source:</a>
+                <br>        
+                
+                <img id='colorImageDisplay' style='display:none' class="responsive" alt='image alt descr'>
+
+                <br>
+                <div class='imageDetailsText'>
+                    
+                    <a id="color1Hex"></a>
+                    <div class="colorBox colorBox1"></div>
+                    <br>
+                    
+                    <a id="color2Hex"></a>
+                    <div class="colorBox colorBox2"></div>
+                    <br>
+
+                    <a id="color3Hex"></a>
+                    <div class="colorBox colorBox3"></div>
+                    <br>
+
+                    <a id="color4Hex"></a>
+                    <div class="colorBox colorBox4"></div>
+                    <br>
+
+                    <a id="color5Hex"></a>
+                    <div class="colorBox colorBox5"></div>
+                    <br>
+
+                    <a id="color6Hex"></a>
+                    <div class="colorBox colorBox6"></div>
+                    <br>
+
+                </div>
+            </div>
+            <button style= "cursor:pointer" id="refreshButton">Reroll colors</button>
         </div>
 
     </nav>
@@ -414,15 +468,56 @@ ul.CTAs a {
     async function setColors(){
         let colors = await getColors()
         let imgPath = colors.imgPath
-        /* 
-        Vibrant
-        LightVibrant
-        DarkVibrant
-        Muted
-        LightMuted
-        DarkMuted
+        //6 possible colors: 
+        //Vibrant
+        //LightVibrant
+        //DarkVibrant
+        //Muted
+        //LightMuted
+        //DarkMuted
+        
+        //get high contrast colors for text
+        /*
+        let sidebarColorBackground = colors.colors['DarkVibrant']
+        console.log("sidebarColorBackground = ", sidebarColorBackground)
+        sidebarColorBackground = sidebarColorBackground.substring(4, sidebarColorBackground.length-1);
+        console.log("sidebarColorBackground = ", sidebarColorBackground)
+        sidebarColorBackground = sidebarColorBackground.split(',');
+        console.log("sidebarColorBackground = ", sidebarColorBackground)
+        sidebarColorBackground_hex = rgbToHex(213, 23, 36)
+        console.log("sidebarColorBackground_hex = ", sidebarColorBackground_hex)
+        let sidebarColorBackground_text = invertColor(sidebarColorBackground_hex)
+        console.log("sidebarColorBackground_text = ", sidebarColorBackground_text)
         */
-
+        
+        //change color display text and set color box hex value
+        //make all colors visible 
+        document.getElementById('pageColorsText').style.display = "block";
+        //color 1
+        var color1 = colors.colors['Vibrant']
+        var color1_hex = rgbToHex(color1)
+        document.getElementById("color1Hex").innerText = `Color 1: ${color1_hex}`
+        //color 2
+        var color2 = colors.colors['LightVibrant']
+        var color2_hex = rgbToHex(color2)
+        document.getElementById("color2Hex").innerText = `Color 2: ${color2_hex}`
+        //color 3
+        var color3 = colors.colors['DarkVibrant']
+        var color3_hex = rgbToHex(color3)
+        document.getElementById("color3Hex").innerText = `Color 3: ${color3_hex}`
+        //color 4
+        var color4 = colors.colors['Muted']
+        var color4_hex = rgbToHex(color4)
+        document.getElementById("color4Hex").innerText = `Color 4: ${color4_hex}`
+        //color 5
+        var color5 = colors.colors['LightMuted']
+        var color5_hex = rgbToHex(color5)
+        document.getElementById("color5Hex").innerText = `Color 5: ${color5_hex}`
+        //color 6
+        var color6 = colors.colors['DarkMuted']
+        var color6_hex = rgbToHex(color6)
+        document.getElementById("color6Hex").innerText = `Color 6: ${color6_hex}`
+        
         //change display image source
         document.getElementById('colorImageDisplay').src=`${imgPath}`
 
@@ -431,34 +526,86 @@ ul.CTAs a {
 
         //change colors
         var sheet = document.createElement('style')
-        let innerHTMLStyle = `
-        /* sidebar top background color */
-        #sidebarTop {background: ${colors.colors['LightMuted']};}
 
-        /* sidebar background color */
-        #sidebar { background: ${colors.colors['Vibrant']}; } 
+        let innerHTMLStyle = `
+        /* Color Display Text/Boxes */
+        .colorBox1{ background: ${color1_hex}; }
+        .colorBox2{ background: ${color2_hex}; }
+        .colorBox3{ background: ${color3_hex}; }
+        .colorBox4{ background: ${color4_hex}; }
+        .colorBox5{ background: ${color5_hex}; }
+        .colorBox6{ background: ${color6_hex}; }
+
+        /* sidebar_header_background_color */
+        #sidebarTop {background: ${colors.colors['LightMuted']};}        
+
+        /* sidebar_background_color */
+        #sidebar { background: linear-gradient(22deg, ${colors.colors['LightVibrant']}, ${colors.colors['Muted']}); } 
 
         /* active tab color */
         #currentPage { background: ${colors.colors['LightVibrant']}; } 
 
-        /* main page body background color */
-        body { background: ${colors.colors['LightVibrant']}; } 
+        /* main page body background color solid */
+        body { background: red; }
 
-       
+        /* main page body background color gradient */ 
+        body { background: linear-gradient(2deg, ${color3_hex}, ${color6_hex});}
+
         /* ul ul a { expanded tab background color */
         .sideBarOption { background: ${colors.colors['Muted']}; } 
 
         /* sidebar hover color */
         #sidebar ul li a:hover { background: ${colors.colors['DarkVibrant']}; } `;
 
-        console.log("innerHTMLStyle = ", innerHTMLStyle)
+        //console.log("innerHTMLStyle = ", innerHTMLStyle)
         sheet.innerHTML = innerHTMLStyle 
         document.head.appendChild(sheet);
     }
 
+    function invertColor(hex) {
+        if (hex.indexOf('#') === 0) {
+            hex = hex.slice(1);
+        }
+        // convert 3-digit hex to 6-digits.
+        if (hex.length === 3) {
+            hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+        }
+        if (hex.length !== 6) {
+            throw new Error('Invalid HEX color.');
+        }
+        // invert color components
+        var r = (255 - parseInt(hex.slice(0, 2), 16)).toString(16),
+            g = (255 - parseInt(hex.slice(2, 4), 16)).toString(16),
+            b = (255 - parseInt(hex.slice(4, 6), 16)).toString(16);
+        // pad each with zeros and return
+        return '#' + padZero(r) + padZero(g) + padZero(b);
+    }
+
+    function padZero(str, len) {
+        len = len || 2;
+        var zeros = new Array(len).join('0');
+        return (zeros + str).slice(-len);
+    }
+    
+    //rgb to hex 
+    function componentToHex(c) {
+        var hex = c.toString(16);
+        return hex.length == 1 ? "0" + hex : hex;
+    }
+
+    function rgbToHex(color) {
+        //color = string like rgb(a,b,c)
+        //remove string parts
+        color = color.substring(4, color.length-1);
+        //turn into arr
+        color = color.split(',');
+        
+        return "#" + componentToHex(parseInt(color[0])) + componentToHex(parseInt(color[1])) + componentToHex(parseInt(color[2]));
+    }
+
     async function imageModalSetup(){
         // Get the modal
-        var modal = document.getElementById("myModal");
+        var modal = document.getElementById("imageModal");
 
         // Get the image and insert it inside the modal - use its "alt" text as a caption
         var img = document.getElementById("colorImageDisplay");
@@ -477,14 +624,34 @@ ul.CTAs a {
 
         // When the user clicks on <span> (x), close the modal
         span.onclick = function() {
-            modal.style.display = "none";
+            $('#imageModal').fadeOut(500);
         }
     }
 
     $(document).ready(function () {
 
-        
+        //refresh button 
+        const refreshButton = document.getElementById('refreshButton');
+        const refreshPage = () => {
+            location.reload();
+        }
+        refreshButton.addEventListener('click', refreshPage)
 
+        //if clicking outside modal, close modal
+        $(document).click(function (e) {
+            if ($(e.target).is('#imageModal')) {
+                $('#imageModal').fadeOut(500);
+            }
+
+        });
+
+
+        //on escape key click, close modal
+        $(document).keydown(function(event) { 
+            if (event.keyCode == 27) { 
+                $('#imageModal').fadeOut(500);
+            }
+        });
 
         //side bar collapse event
         $('#sidebarCollapse').on('click', function () {

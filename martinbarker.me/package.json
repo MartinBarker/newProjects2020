@@ -8,7 +8,7 @@
     "build": "docker build -t alien35/node-web-app .",
     "startd": "docker run -p 49160:8080 -d alien35/node-web-app",
     "open": "open http://localhost:49160",
-    "go": "npm run build && npm run startd && docker ps"
+    "go": "nodemon server.js -e js,handlebars"
   },
   "author": "",
   "license": "ISC",
@@ -18,6 +18,7 @@
     "express-handlebars": "^4.0.4",
     "fluent-ffmpeg": "^2.1.2",
     "handlebars": "^4.7.6",
-    "node-vibrant": "^3.1.5"
+    "node-vibrant": "^3.1.5",
+    "nodemon": "^2.0.4"
   }
 }
