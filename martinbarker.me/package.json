@@ -8,7 +8,7 @@
     "build": "docker build -t alien35/node-web-app .",
     "startd": "docker run -p 49160:8080 -d alien35/node-web-app",
     "open": "open http://localhost:49160",
-    "go": "npm run build && npm run startd && docker ps"
+    "go": "nodemon server.js -e js,handlebars"
   },
   "author": "",
   "license": "ISC",
