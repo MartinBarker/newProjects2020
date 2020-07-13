@@ -518,7 +518,6 @@ font-family:'Consolas'
         var color6_hex = rgbToHex(color6)
         document.getElementById("color6Hex").innerText = `Color 6: ${color6_hex}`
         
-
         //change display image source
         document.getElementById('colorImageDisplay').src=`${imgPath}`
 
@@ -541,13 +540,14 @@ font-family:'Consolas'
         #sidebarTop {background: ${colors.colors['LightMuted']};}        
 
         /* sidebar_background_color */
-        #sidebar { background: linear-gradient(22deg, ${colors.colors['LightVibrant']}, ${colors.colors['Muted']});  } 
+        #sidebar { background: linear-gradient(22deg, ${colors.colors['LightVibrant']}, ${colors.colors['Muted']}); } 
 
         /* active tab color */
         #currentPage { background: ${colors.colors['LightVibrant']}; } 
 
-        /* main page body background color */
-        body { background: ${colors.colors['LightVibrant']}; } 
+        /* main page body background color 
+        body { background: ${colors.colors['LightVibrant']}; } */
+        body { background: linear-gradient(2deg, ${color3_hex}, ${color6_hex});}
 
         /* ul ul a { expanded tab background color */
         .sideBarOption { background: ${colors.colors['Muted']}; } 
