@@ -4,48 +4,80 @@ var router = express.Router();
 
 
 //tagger.site route
-app.get('/tagger', function (req, res) {
+app.get('/tagger', async function (req, res) {
   console.log("/tagger")
+  let colorData = await getPageColorInfo()
+  console.log("/tagger colorData = ", colorData)
+
   res.render('newTagger', {
-      layout : 'newHomeindex', 
-      pageTitle: 'tagger.site',
-      projectsTab:'active',
-      icon: 'https://cdn4.iconfinder.com/data/icons/48-bubbles/48/06.Tags-512.png'
-    });
+    layout: 'newHomeindex',
+    pageTitle: 'tagger.site',
+    tagger: 'active',
+    projectsTab: 'active',
+    icon: 'https://cdn4.iconfinder.com/data/icons/48-bubbles/48/06.Tags-512.png',
+    //color Data
+    Vibrant: colorData.colors['Vibrant'],
+    LightVibrant: colorData.colors['LightVibrant'],
+    DarkVibrant: colorData.colors['DarkVibrant'],
+    Muted: colorData.colors['Muted'],
+    LightMuted: colorData.colors['LightMuted'],
+    DarkMuted: colorData.colors['DarkMuted'],
+    imgPath: colorData.imgPath
+  });
 })
 
-// ES5
+//nodejs virbant color picker extension
 var Vibrant = require('node-vibrant')
 
-app.post('/getColors', async function(req, res){
+//api route to return pageColors
+app.post('/getColors', async function (req, res) {
   //let filepath = req.body.filepath
-  console.log("/getColors route " )
-
-  let randomImg = await getRandomImg('static/assets/aesthetic-images/')
-  let imgPath = `static/assets/aesthetic-images/${randomImg}`
-
-  //get color swatches
-  var swatches = await Vibrant.from(imgPath).getPalette()
-  //format rbg and swatch type into list
-  let colors = {}
-  for (const [key, value] of Object.entries(swatches)) {
-    //get colorValue
-    let colorValue = value.rgb
-    colorValue = `rgb(${colorValue.toString()})`
-    //add colorName:colorValue to object
-    var keyName = `${key}`
-    colors[keyName] = colorValue
-  }
-  res.send({colors:colors, imgPath:imgPath})
+  console.log("/getColors")
+  let colorData = await getPageColorInfo()
+  res.send(colorData)
 });
 
-//helper functions
-function getRandomImg(path){
-  return new Promise(async function (resolve, reject){
+//return pageColors
+async function getPageColorInfo() {
+  return new Promise(async function (resolve, reject) {
+    let randomImg = await getRandomImg('static/assets/aesthetic-images/')
+    let imgPath = `static/assets/aesthetic-images/${randomImg}`
+
+    //get color swatches
+    var swatches = await Vibrant.from(imgPath).getPalette()
+    //format rbg and swatch type into list
+    let colors = {}
+    for (const [key, value] of Object.entries(swatches)) {
+      //get rgb color value
+      let colorValue = value.rgb
+      //convert to hex color value
+      let hexColor = rgbToHex(colorValue)
+      //construct object
+      var keyName = `${key}`
+      colors[keyName] = hexColor
+    }
+    resolve({ colors: colors, imgPath: imgPath })
+  })
+}
+
+//convert rgb string to hex
+function rgbToHex(color) {
+  return "#" + componentToHex(parseInt(color[0])) + componentToHex(parseInt(color[1])) + componentToHex(parseInt(color[2]));
+}
+
+//convert to int to hex
+function componentToHex(c) {
+  var hex = c.toString(16);
+  return hex.length == 1 ? "0" + hex : hex;
+}
+
+//return random image filename from path
+function getRandomImg(path) {
+  return new Promise(async function (resolve, reject) {
     var fs = require('fs');
     var files = fs.readdirSync('static/assets/aesthetic-images/')
     /* now files is an Array of the name of the files in the folder and you can pick a random name inside of that array */
-    let chosenFile = files[Math.floor(Math.random() * files.length)] 
+    let chosenFile = files[Math.floor(Math.random() * files.length)]
     resolve(chosenFile)
   })
 }
@@ -56,7 +88,7 @@ module.exports = app;
 /*
 router.get('/newHome/tagger', function(req, res) {
   res.render('newtagger', {
-    layout : 'newHomeindex', 
+    layout : 'newHomeindex',
     pageTitle: 'tagger.site',
     projectsTab:'active',
     icon: 'https://cdn4.iconfinder.com/data/icons/48-bubbles/48/06.Tags-512.png'
@@ -78,10 +110,10 @@ router.get('/newHome/tagger', function(req, res) {
 
 //new home routes
 router.get('/newHome', (req, res) => {
-  res.render('newhome', {  //page specific body contents 
+  res.render('newhome', {  //page specific body contents
       layout : 'newHomeindex',  //index [outside generic code: navbar/ads/SEO/accessibility]
-      pageTitle: 'tagger.site', 
-      icon: '/static/assets/img/home.png', 
+      pageTitle: 'tagger.site',
+      icon: '/static/assets/img/home.png',
       homePage:'active',
   });
 });
@@ -89,7 +121,7 @@ router.get('/newHome', (req, res) => {
 //new tagger home route
 router.get('/newHome/tagger', (req, res) => {
   res.render('newtagger', {
-    layout : 'newHomeindex', 
+    layout : 'newHomeindex',
     pageTitle: 'tagger.site',
     projectsTab:'active',
     icon: 'https://cdn4.iconfinder.com/data/icons/48-bubbles/48/06.Tags-512.png'
@@ -100,18 +132,18 @@ router.get('/newHome/tagger', (req, res) => {
 //home page route
 router.get('/', (req, res) => {
     res.render('home', {
-        layout : 'index', 
-        pageTitle: 'martinbarker.me', 
-        icon: 'https://cdn4.iconfinder.com/data/icons/48-bubbles/48/06.Tags-512.png', 
+        layout : 'index',
+        pageTitle: 'martinbarker.me',
+        icon: 'https://cdn4.iconfinder.com/data/icons/48-bubbles/48/06.Tags-512.png',
         expandProjects: 'active',
         activeTagger: 'active'
     });
 });
 
 //tagger home route
-router.get('/tagger',function(req, res){    
+router.get('/tagger',function(req, res){
     res.render('tagger', {
-      layout : 'index', 
+      layout : 'index',
       pageTitle: 'tagger.site',
       projectsTab:'active',
       icon: 'https://cdn4.iconfinder.com/data/icons/48-bubbles/48/06.Tags-512.png'
@@ -119,9 +151,9 @@ router.get('/tagger',function(req, res){
   });
 
 //discogstagger routes
-router.get('/discogstagger',function(req, res){    
+router.get('/discogstagger',function(req, res){
     res.render('discogstagger', {
-      layout : 'index', 
+      layout : 'index',
       pageTitle: 'discogstagger.site',
       projectsTab:'active',
       icon: '/static/assets/img/discogstagger.png'
@@ -136,7 +168,7 @@ router.get('/projects', (req, res) => {
     res.render('projects', {
         layout : 'index',
         pageTitle: 'projects',
-        icon: '/static/assets/img/projects.png', 
+        icon: '/static/assets/img/projects.png',
         projectsTab:'active'
     });
 });
