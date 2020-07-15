@@ -26,6 +26,25 @@ app.get('/tagger', async function (req, res) {
   });
 })
 
+//discogstagger routes
+app.get('/discogstagger', async function(req, res){
+  let colorData = await getPageColorInfo()
+  res.render('discogstagger', {
+    layout : 'newHomeindex',
+    pageTitle: 'discogstagger.site',
+    projectsTab:'active',
+    icon: '/static/assets/img/discogstagger.png',
+    //color Data
+    Vibrant: colorData.colors['Vibrant'],
+    LightVibrant: colorData.colors['LightVibrant'],
+    DarkVibrant: colorData.colors['DarkVibrant'],
+    Muted: colorData.colors['Muted'],
+    LightMuted: colorData.colors['LightMuted'],
+    DarkMuted: colorData.colors['DarkMuted'],
+    imgPath: colorData.imgPath
+  });
+});
+
 //nodejs virbant color picker extension
 var Vibrant = require('node-vibrant')
 
