@@ -329,9 +329,9 @@ font-family:'Consolas'
 <!-- Page Content -->
 <div class="wrapper" class="toggled">
     <!-- Sidebar  -->
-    <nav id="sidebar">
+    <nav id="sidebar" style='background: linear-gradient(90deg, {{LightVibrant}}, {{Muted}});'>
 
-        <div id='sidebarTop' class="sidebar-header">
+        <div id='sidebarTop' class="sidebar-header" style='background: {{LightVibrant}}'>
             <h3 style='text-size:22px'>Martin Barker</h3> <button id='sidebarCollapse'><img src="https://img.icons8.com/ios-filled/24/000000/menu.png"/></button> <!-- id='sidebutton' -->
         </div>
 
@@ -346,7 +346,11 @@ font-family:'Consolas'
                 <a href="#projectsSubmenu" data-toggle="collapse" class="dropdown-toggle ">Projects</a>
                 <ul class="collapse list-unstyled show " id="projectsSubmenu">
                     <li >
-                        <a id='currentPage' href="#">tagger.site</a>
+                        <a 
+                        {{#ifEquals tagger 'active'}}
+                            style='background: linear-gradient(90deg, {{LightVibrant}}, {{LightMuted}});'
+                        {{/ifEquals}}
+                        href="#">tagger.site</a>
                     </li>
                     <li>
                         <a href="#">discogstagger.site</a>
@@ -395,39 +399,39 @@ font-family:'Consolas'
             </li>
         </ul>
 
-        <div style='display:none' id="pageColorsText" class='sidebar-footer'>
+        <div id="pageColorsText" class='sidebar-footer'>
             <div class="sidebar-footer imageDetails">
 
                 <a class="imageDetailsText">Page colors source:</a>
                 <br>        
                 
-                <img id='colorImageDisplay' style='display:none' class="responsive" alt='image alt descr'>
+                <img id='colorImageDisplay' src='{{imgPath}}' style='display:none' class="responsive" alt='image alt descr'>
 
                 <br>
                 <div class='imageDetailsText'>
                     
-                    <a id="color1Hex"></a>
-                    <div class="colorBox colorBox1"></div>
+                    <a id="color1Hex">Vibrant: {{Vibrant}}</a>
+                    <div class="colorBox colorBox1" style='background: {{Vibrant}}'></div>
                     <br>
                     
-                    <a id="color2Hex"></a>
-                    <div class="colorBox colorBox2"></div>
+                    <a id="color2Hex">LightVibrant: {{LightVibrant}}</a>
+                    <div class="colorBox colorBox2" style='background: {{LightVibrant}}'></div>
                     <br>
 
-                    <a id="color3Hex"></a>
-                    <div class="colorBox colorBox3"></div>
+                    <a id="color3Hex">DarkVibrant: {{DarkVibrant}}</a>
+                    <div class="colorBox colorBox3" style='background: {{DarkVibrant}}'></div>
                     <br>
 
-                    <a id="color4Hex"></a>
-                    <div class="colorBox colorBox4"></div>
+                    <a id="color4Hex">Muted: {{Muted}}</a>
+                    <div class="colorBox colorBox4" style='background: {{Muted}}'></div>
                     <br>
 
-                    <a id="color5Hex"></a>
-                    <div class="colorBox colorBox5"></div>
+                    <a id="color5Hex">LightMuted: {{LightMuted}}</a>
+                    <div class="colorBox colorBox5" style='background: {{LightMuted}}'></div>
                     <br>
 
-                    <a id="color6Hex"></a>
-                    <div class="colorBox colorBox6"></div>
+                    <a id="color6Hex">DarkMuted: {{DarkMuted}}</a>
+                    <div class="colorBox colorBox6" style='background: {{DarkMuted}}'></div>
                     <br>
 
                 </div>
@@ -438,9 +442,9 @@ font-family:'Consolas'
     </nav>
 
     <!-- Page Content -->
-    <div id="content">
+    <div id="content" style='background: {{LightMuted}};'>
         <!-- Top of Page navbar -->
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <nav class="navbar navbar-expand-lg " style='background: {{LightVibrant}}'>
             <div class="container-fluid">
                 <div class="row">
                     <div class="col">
@@ -451,7 +455,7 @@ font-family:'Consolas'
                         </button>
                         -->
                     </div>
-                    <div class="col">
+                    <div class="col" style='color: {{colorx}}'>
                         <h1 class="widgettitle"><strong>tagger.site</strong></h1>
                     </div>
                 
@@ -463,7 +467,7 @@ font-family:'Consolas'
 
 <script type="text/javascript">
     
-    setColors()
+    //setColors()
 
     async function setColors(){
         let colors = await getColors()
@@ -493,6 +497,7 @@ font-family:'Consolas'
         //change color display text and set color box hex value
         //make all colors visible 
         document.getElementById('pageColorsText').style.display = "block";
+        /*
         //color 1
         var color1 = colors.colors['Vibrant']
         var color1_hex = rgbToHex(color1)
@@ -517,9 +522,10 @@ font-family:'Consolas'
         var color6 = colors.colors['DarkMuted']
         var color6_hex = rgbToHex(color6)
         document.getElementById("color6Hex").innerText = `Color 6: ${color6_hex}`
-        
+        */ 
+
         //change display image source
-        document.getElementById('colorImageDisplay').src=`${imgPath}`
+        //document.getElementById('colorImageDisplay').src=`${imgPath}`
 
         //setup image modal popup
         imageModalSetup()
@@ -528,28 +534,29 @@ font-family:'Consolas'
         var sheet = document.createElement('style')
 
         let innerHTMLStyle = `
-        /* Color Display Text/Boxes */
+        /* Color Display Text/Boxes 
         .colorBox1{ background: ${color1_hex}; }
         .colorBox2{ background: ${color2_hex}; }
         .colorBox3{ background: ${color3_hex}; }
         .colorBox4{ background: ${color4_hex}; }
         .colorBox5{ background: ${color5_hex}; }
         .colorBox6{ background: ${color6_hex}; }
+        */
+
+        /* main page body background color solid
+        body { background: red; } */
 
         /* sidebar_header_background_color */
         #sidebarTop {background: ${colors.colors['LightMuted']};}        
 
         /* sidebar_background_color */
-        #sidebar { background: linear-gradient(22deg, ${colors.colors['LightVibrant']}, ${colors.colors['Muted']}); } 
+        #sidebar { background: linear-gradient(0deg, ${colors.colors['LightVibrant']}, ${colors.colors['Muted']}); } 
 
         /* active tab color */
         #currentPage { background: ${colors.colors['LightVibrant']}; } 
 
-        /* main page body background color solid */
-        body { background: red; }
-
-        /* main page body background color gradient */ 
-        body { background: linear-gradient(2deg, ${color3_hex}, ${color6_hex});}
+        /* main page body background color gradient 
+        body { background: linear-gradient(2deg, ${color3_hex}, ${color6_hex});} */ 
 
         /* ul ul a { expanded tab background color */
         .sideBarOption { background: ${colors.colors['Muted']}; } 
@@ -558,8 +565,8 @@ font-family:'Consolas'
         #sidebar ul li a:hover { background: ${colors.colors['DarkVibrant']}; } `;
 
         //console.log("innerHTMLStyle = ", innerHTMLStyle)
-        sheet.innerHTML = innerHTMLStyle 
-        document.head.appendChild(sheet);
+        //sheet.innerHTML = innerHTMLStyle 
+        //document.head.appendChild(sheet);
     }
 
     function invertColor(hex) {
@@ -603,6 +610,9 @@ font-family:'Consolas'
         return "#" + componentToHex(parseInt(color[0])) + componentToHex(parseInt(color[1])) + componentToHex(parseInt(color[2]));
     }
 
+    //setup image modal popup
+    imageModalSetup()
+
     async function imageModalSetup(){
         // Get the modal
         var modal = document.getElementById("imageModal");
@@ -642,9 +652,7 @@ font-family:'Consolas'
             if ($(e.target).is('#imageModal')) {
                 $('#imageModal').fadeOut(500);
             }
-
         });
-
 
         //on escape key click, close modal
         $(document).keydown(function(event) { 
