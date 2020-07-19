@@ -59,7 +59,10 @@ a:focus {
 }
 
 .navbar {
+    /*
     padding: 15px 10px;
+    margin-right: 77px;
+    */
     /* background: rgb(11, 223, 212); */
     border: none;
     border-radius: 0;
@@ -467,9 +470,10 @@ font-family:'Consolas'
 
 <script type="text/javascript">
     
-    //setColors()
+    setColors()
 
     async function setColors(){
+        console.log('setcolors()')
         let colors = await getColors()
         let imgPath = colors.imgPath
         //6 possible colors: 
@@ -496,7 +500,7 @@ font-family:'Consolas'
         
         //change color display text and set color box hex value
         //make all colors visible 
-        document.getElementById('pageColorsText').style.display = "block";
+        //document.getElementById('pageColorsText').style.display = "block";
         /*
         //color 1
         var color1 = colors.colors['Vibrant']
@@ -528,38 +532,38 @@ font-family:'Consolas'
         //document.getElementById('colorImageDisplay').src=`${imgPath}`
 
         //setup image modal popup
-        imageModalSetup()
+        //imageModalSetup()
 
         //change colors
         var sheet = document.createElement('style')
 
+        
+        let hoverColor = "{{Vibrant}}";
+        console.log("js hoverColor = ", hoverColor)
+
+        let innerHTMLHoverColorStyle = `#sidebar ul li a:hover { background: ${hoverColor}; } `;
+        sheet.innerHTML = innerHTMLHoverColorStyle 
+        document.head.appendChild(sheet);
+
         let innerHTMLStyle = `
-        /* Color Display Text/Boxes 
-        .colorBox1{ background: ${color1_hex}; }
-        .colorBox2{ background: ${color2_hex}; }
-        .colorBox3{ background: ${color3_hex}; }
-        .colorBox4{ background: ${color4_hex}; }
-        .colorBox5{ background: ${color5_hex}; }
-        .colorBox6{ background: ${color6_hex}; }
-        */
 
         /* main page body background color solid
         body { background: red; } */
 
-        /* sidebar_header_background_color */
-        #sidebarTop {background: ${colors.colors['LightMuted']};}        
+        /* sidebar_header_background_color 
+        #sidebarTop {background: ${colors.colors['LightMuted']};}   */ 
 
-        /* sidebar_background_color */
-        #sidebar { background: linear-gradient(0deg, ${colors.colors['LightVibrant']}, ${colors.colors['Muted']}); } 
+        /* sidebar_background_color 
+        #sidebar { background: linear-gradient(0deg, ${colors.colors['LightVibrant']}, ${colors.colors['Muted']}); } */
 
-        /* active tab color */
-        #currentPage { background: ${colors.colors['LightVibrant']}; } 
+        /* active tab color 
+        #currentPage { background: ${colors.colors['LightVibrant']}; } */
 
         /* main page body background color gradient 
-        body { background: linear-gradient(2deg, ${color3_hex}, ${color6_hex});} */ 
+        body { background: linear-gradient(2deg, color3_hex, color6_hex);} */ 
 
-        /* ul ul a { expanded tab background color */
-        .sideBarOption { background: ${colors.colors['Muted']}; } 
+        /* ul ul a { expanded tab background color 
+        .sideBarOption { background: ${colors.colors['Muted']}; }  */
 
         /* sidebar hover color */
         #sidebar ul li a:hover { background: ${colors.colors['DarkVibrant']}; } `;

@@ -7,7 +7,6 @@ var router = express.Router();
 app.get('/tagger', async function (req, res) {
   console.log("/tagger")
   let colorData = await getPageColorInfo()
-  console.log("/tagger colorData = ", colorData)
 
   res.render('newTagger', {
     layout: 'newHomeindex',
