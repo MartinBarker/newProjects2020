@@ -26,6 +26,9 @@
     <!-- jQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 
+    <!-- font-awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
 </head>
 
 <!-- Style -->
@@ -218,7 +221,7 @@ ul.CTAs a {
 .sidebar-footer{
 text-align: center;
 font-size: 1.1rem;
-font-family:'Consolas'
+/*font-family:'Consolas' */
 }
 
 /* image footer color boxes */
@@ -245,6 +248,9 @@ font-family:'Consolas'
 
   <!-- Modal Caption (Image Text) -->
   <div id="caption"></div>
+
+  <!-- YouTube vid (if possible) -->
+  <iframe style='display:block; display: block; margin-right: auto; margin-left: auto;' width="420" height="345" src="https://www.youtube.com/embed/wNFaAn-AkPc" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 </div>
 
 <style>
@@ -404,42 +410,25 @@ font-family:'Consolas'
 
         <div id="pageColorsText" class='sidebar-footer'>
             <div class="sidebar-footer imageDetails">
-
-                <a class="imageDetailsText">Page colors source:</a>
-                <br>        
+                
+                <button style="font-size:14px; cursor:pointer;">Play <i class="fa fa-play"></i></button>
+                <button style="font-size:14px; cursor:pointer;" id="refreshButton">Refresh colors</button> 
+                
+                <br> 
                 
                 <img id='colorImageDisplay' src='{{imgPath}}' style='display:none' class="responsive" alt='image alt descr'>
+                
+                <div title="Vibrant: {{Vibrant}}" class="colorBox colorBox1" style="background: {{Vibrant}}"></div>
+                <div title="LightVibrant: {{LightVibrant}}" class="colorBox colorBox2" style='background: {{LightVibrant}}'></div>
+                <div title="DarkVibrant: {{DarkVibrant}}" class="colorBox colorBox3" style='background: {{DarkVibrant}}'></div>
+                <div title="Muted: {{Muted}}" class="colorBox colorBox4" style='background: {{Muted}}'></div>
+                <div title="LightMuted: {{LightMuted}}" class="colorBox colorBox5" style='background: {{LightMuted}}'></div>
+                <div title="DarkMuted: {{DarkMuted}}" class="colorBox colorBox6" style='background: {{DarkMuted}}'></div>
+                
+                
 
-                <br>
-                <div class='imageDetailsText'>
-                    
-                    <a id="color1Hex">Vibrant: {{Vibrant}}</a>
-                    <div class="colorBox colorBox1" style='background: {{Vibrant}}'></div>
-                    <br>
-                    
-                    <a id="color2Hex">LightVibrant: {{LightVibrant}}</a>
-                    <div class="colorBox colorBox2" style='background: {{LightVibrant}}'></div>
-                    <br>
-
-                    <a id="color3Hex">DarkVibrant: {{DarkVibrant}}</a>
-                    <div class="colorBox colorBox3" style='background: {{DarkVibrant}}'></div>
-                    <br>
-
-                    <a id="color4Hex">Muted: {{Muted}}</a>
-                    <div class="colorBox colorBox4" style='background: {{Muted}}'></div>
-                    <br>
-
-                    <a id="color5Hex">LightMuted: {{LightMuted}}</a>
-                    <div class="colorBox colorBox5" style='background: {{LightMuted}}'></div>
-                    <br>
-
-                    <a id="color6Hex">DarkMuted: {{DarkMuted}}</a>
-                    <div class="colorBox colorBox6" style='background: {{DarkMuted}}'></div>
-                    <br>
-
-                </div>
             </div>
-            <button style= "cursor:pointer" id="refreshButton">Reroll colors</button>
+            
         </div>
 
     </nav>
@@ -450,18 +439,13 @@ font-family:'Consolas'
         <nav class="navbar navbar-expand-lg " style='background: {{LightVibrant}}'>
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col">
-                        <!--
-                        <button type="button" id="sidebarCollapse" class="btn btn-info">
-                            <i class="fas fa-align-left"></i>
-                            <span>Toggle Sidebar</span>
-                        </button>
-                        -->
-                    </div>
                     <div class="col" style='color: {{colorx}}'>
                         <h1 class="widgettitle"><strong>tagger.site</strong></h1>
                     </div>
-                
+                </div>
+                <div class="row">
+                    Github
+                </div>
             </div>
         </nav>
         {{{body}}}
@@ -537,9 +521,7 @@ font-family:'Consolas'
         //change colors
         var sheet = document.createElement('style')
 
-        
         let hoverColor = "{{Vibrant}}";
-        console.log("js hoverColor = ", hoverColor)
 
         let innerHTMLHoverColorStyle = `#sidebar ul li a:hover { background: ${hoverColor}; } `;
         sheet.innerHTML = innerHTMLHoverColorStyle 

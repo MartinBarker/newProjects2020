@@ -2,7 +2,6 @@ const express = require('express');
 const app = express();
 var router = express.Router();
 
-
 //tagger.site route
 app.get('/tagger', async function (req, res) {
   console.log("/tagger")
@@ -21,7 +20,7 @@ app.get('/tagger', async function (req, res) {
     Muted: colorData.colors['Muted'],
     LightMuted: colorData.colors['LightMuted'],
     DarkMuted: colorData.colors['DarkMuted'],
-    imgPath: colorData.imgPath
+    imgPath: colorData.imgPath,
   });
 })
 
@@ -40,7 +39,7 @@ app.get('/discogstagger', async function(req, res){
     Muted: colorData.colors['Muted'],
     LightMuted: colorData.colors['LightMuted'],
     DarkMuted: colorData.colors['DarkMuted'],
-    imgPath: colorData.imgPath
+    imgPath: colorData.imgPath,
   });
 });
 
@@ -74,7 +73,7 @@ async function getPageColorInfo() {
       var keyName = `${key}`
       colors[keyName] = hexColor
     }
-    resolve({ colors: colors, imgPath: imgPath })
+    resolve({ colors: colors, imgPath: imgPath, filename: randomImg })
   })
 }
 
