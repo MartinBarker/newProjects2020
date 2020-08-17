@@ -243,8 +243,8 @@ font-size: 1.1rem;
 </style>
 
 <!-- Image Source Popup Modal -->
-<div id="imageModal" class="modal">
-
+<div id="imageModal" class="modal" >
+    {{!--
   <!-- The Close Button -->
   <span class="close">&times;</span>
 
@@ -256,7 +256,38 @@ font-size: 1.1rem;
 
   <!-- YouTube vid (if possible) -->
   <iframe style='display:block; display: block; margin-right: auto; margin-left: auto;' width="420" height="345" src="https://www.youtube.com/embed/wNFaAn-AkPc" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>  
+    --}}
+    
+
+  <!-- The Close Button -->
+  <span class="close">×</span>
+
+  <!-- Modal Content (The Image) -->
+  <img class="modal-content" id="img01" src="{{imgPath}}">
+
+    {{#if imgDesc}}
+        <div id="caption">{{imgDesc}}</div>
+    {{/if}}
+
+    {{#if imgListen}}
+        <iframe style="display:block; display: block; margin-right: auto; margin-left: auto;" width="420" height="345" src="{{imgListen}}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>  
+    {{/if}}
+
+    {{#if imgSrc}}
+        <div id="caption">
+            <a href='{{imgSrc}}'>Source</a>
+        </div>
+    {{/if}}
+
+  <!-- Modal Caption (Image Text) -->
+  
+
+  <!-- YouTube vid (if possible)
+  <iframe style="display:block; display: block; margin-right: auto; margin-left: auto;" width="420" height="345" src="https://www.youtube.com/embed/wNFaAn-AkPc" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>  
+     -->
 </div>
+
+
 
 <style>
 /* githubUrl hover */
@@ -436,9 +467,11 @@ font-size: 1.1rem;
                 <button style="font-size:14px; cursor:pointer;" id="refreshButton">Refresh colors</button> 
                 
                 <br> 
-                
-                <img id='colorImageDisplay' src='{{imgPath}}' style='display:none' class="responsive" alt='image alt descr'>
-                
+                <!--
+                <img id='colorImageDisplay' src='static/assets/aesthetic-images/JohnBerkey.jpg' style='display:none' class="responsive" alt='image alt descr'>
+                -->
+                <img id="colorImageDisplay" src="{{imgPath}}" style="display: block;" class="responsive" alt="image alt descr">
+
                 <div title="Vibrant: {{Vibrant}}" class="colorBox colorBox1" style="background: {{Vibrant}}"></div>
                 <div title="LightVibrant: {{LightVibrant}}" class="colorBox colorBox2" style='background: {{LightVibrant}}'></div>
                 <div title="DarkVibrant: {{DarkVibrant}}" class="colorBox colorBox3" style='background: {{DarkVibrant}}'></div>
@@ -676,11 +709,13 @@ font-size: 1.1rem;
     imageModalSetup()
 
     async function imageModalSetup(){
+      
         // Get the modal
         var modal = document.getElementById("imageModal");
 
         // Get the image and insert it inside the modal - use its "alt" text as a caption
         var img = document.getElementById("colorImageDisplay");
+        
         //make image visible
         img.style.display = "block";
         var modalImg = document.getElementById("img01");
@@ -688,8 +723,9 @@ font-size: 1.1rem;
         img.onclick = function(){
             modal.style.display = "block";
             modalImg.src = this.src;
-            captionText.innerHTML = this.alt;
+            //captionText.innerHTML = this.alt;
         }
+       
 
         // Get the <span> element that closes the modal
         var span = document.getElementsByClassName("close")[0];

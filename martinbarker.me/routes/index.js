@@ -23,7 +23,17 @@ app.get('/tagger', async function (req, res) {
     pageBodyNavTitle: 'Page Title',
     //body content github link
     pageBodyNavGithub: 'https://www.youtube.com/watch?v=0df7k__KEHw',
-    
+    //img path
+    imgPath: colorData.imgPath,
+    //img listenable bool
+    imgListenable: colorData.listenable,
+    //img desc
+    imgDesc: colorData.desc,
+    //img src
+    imgSrc: colorData.src,
+    //img listen
+    imgListen: colorData.listen,
+
     /* ~~~~~~~~~~~~~~~~~~~~~
       Side-Navbar Color Data
      ~~~~~~~~~~~~~~~~~~~~~ */
@@ -59,14 +69,15 @@ app.get('/tagger', async function (req, res) {
     textColor5: 'red',
     
 
-    //old color Data
+    //img color display boxes
     Vibrant: colorData.colors['Vibrant'],
     LightVibrant: colorData.colors['LightVibrant'],
     DarkVibrant: colorData.colors['DarkVibrant'],
     Muted: colorData.colors['Muted'],
     LightMuted: colorData.colors['LightMuted'],
     DarkMuted: colorData.colors['DarkMuted'],
-    imgPath: colorData.imgPath,
+    
+    
   });
 })
 
@@ -122,9 +133,16 @@ async function getPageColorInfo() {
 
     //get source info
     let sourceInfo = await getSourceInfo(randomImg)
-    console.log('img sourceInfo = ', sourceInfo)
 
-    resolve({ colors: colors, imgPath: imgPath, filename: randomImg, listenable:sourceInfo.listenable, desc:sourceInfo.desc })
+    resolve({ 
+      colors: colors, 
+      imgPath: imgPath, 
+      filename: randomImg, 
+      listenable: sourceInfo.listenable, 
+      desc: sourceInfo.desc, 
+      src: sourceInfo.src,
+      listen: sourceInfo.listen,
+    })
   })
 }
 
@@ -149,16 +167,17 @@ function getSourceInfo(imgFilename){
 
     let imgSources = {
       'beatgeneration':{
-        'desc':'This album is not availiable online anywhere. <a href="https://www.discogs.com/John-Brent-Len-Chandler-Hugh-Romney-Beat-Generation-Vol-I/release/12692463">Discogs</a>',
+        'desc':'This album is not availiable online anywhere.',
+        'src':'https://www.discogs.com/John-Brent-Len-Chandler-Hugh-Romney-Beat-Generation-Vol-I/release/12692463',
         'listenable':false,
       },
       
       'folkwaysMexico':{
-        'desc':'<iframe width="560" height="315" src="https://www.youtube.com/embed/hsolGtuwvYU" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>',
+        'listen':'https://www.youtube.com/embed/hsolGtuwvYU',
         'listenable':true,
       },
 
-      'John Berkey':{
+      'JohnBerkey':{
         'desc':'John Berkey',
         'listenable':false,
       },
