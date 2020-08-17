@@ -2,18 +2,64 @@ const express = require('express');
 const app = express();
 var router = express.Router();
 
-//tagger.site route
+//tagger route
 app.get('/tagger', async function (req, res) {
-  console.log("/tagger")
+  //get color data based on a random image from /static/assets/aesthetic-images
   let colorData = await getPageColorInfo()
+  console.log('/tagger colorData=',colorData)
 
-  res.render('newTagger', {
-    layout: 'newHomeindex',
+  res.render('tagger', {
+    //template layout to use
+    layout: 'mainTemplate', 
+    //page title of tab
     pageTitle: 'tagger.site',
-    tagger: 'active',
-    projectsTab: 'active',
+    //page tab icon
     icon: 'https://cdn4.iconfinder.com/data/icons/48-bubbles/48/06.Tags-512.png',
-    //color Data
+    //expand projects tab
+    projectsTab: 'active',
+    //set active current tab
+    tagger: 'active',
+    //body content title 
+    pageBodyNavTitle: 'Page Title',
+    //body content github link
+    pageBodyNavGithub: 'https://www.youtube.com/watch?v=0df7k__KEHw',
+    
+    /* ~~~~~~~~~~~~~~~~~~~~~
+      Side-Navbar Color Data
+     ~~~~~~~~~~~~~~~~~~~~~ */
+    //navbar title text color
+    textColor1: 'blue',   
+    //navbar active tab text color
+    textColor2: 'white',
+    //navbar hover tab text color
+    textColor3: 'pink',
+    //navbar text color
+    textColor6: 'brown',
+
+    //navbar title background color
+    backgroundColor1: 'red',
+    //navbar tab background color
+    backgroundColor2: 'yellow', //linear-gradient(90deg, {{LightVibrant}}, {{Muted}});
+    //navbar active tab background color
+    backgroundColor3: 'green', //linear-gradient(90deg, {{LightVibrant}}, {{LightMuted}})
+    //navbar hover tab background color
+    backgroundColor4: 'black',
+
+    /* ~~~~~~~~~~~~~~~~~~~~~
+      Page-Content Color Data
+     ~~~~~~~~~~~~~~~~~~~~~ */
+    //page body background color
+    backgroundColor5: 'white',
+    //page body title background color
+    backgroundColor6: 'pink',
+
+    //page body title text color
+    textColor4: 'green',
+    //page body text color
+    textColor5: 'red',
+    
+
+    //old color Data
     Vibrant: colorData.colors['Vibrant'],
     LightVibrant: colorData.colors['LightVibrant'],
     DarkVibrant: colorData.colors['DarkVibrant'],
@@ -73,7 +119,12 @@ async function getPageColorInfo() {
       var keyName = `${key}`
       colors[keyName] = hexColor
     }
-    resolve({ colors: colors, imgPath: imgPath, filename: randomImg })
+
+    //get source info
+    let sourceInfo = await getSourceInfo(randomImg)
+    console.log('img sourceInfo = ', sourceInfo)
+
+    resolve({ colors: colors, imgPath: imgPath, filename: randomImg, listenable:sourceInfo.listenable, desc:sourceInfo.desc })
   })
 }
 
@@ -86,6 +137,41 @@ function rgbToHex(color) {
 function componentToHex(c) {
   var hex = c.toString(16);
   return hex.length == 1 ? "0" + hex : hex;
+}
+
+//get img source info
+function getSourceInfo(imgFilename){
+  
+  return new Promise(async function (resolve, reject) {
+    
+    //remove filetype at end
+    imgFilename = imgFilename.substring(0, imgFilename.indexOf('.'))
+
+    let imgSources = {
+      'beatgeneration':{
+        'desc':'This album is not availiable online anywhere. <a href="https://www.discogs.com/John-Brent-Len-Chandler-Hugh-Romney-Beat-Generation-Vol-I/release/12692463">Discogs</a>',
+        'listenable':false,
+      },
+      
+      'folkwaysMexico':{
+        'desc':'<iframe width="560" height="315" src="https://www.youtube.com/embed/hsolGtuwvYU" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>',
+        'listenable':true,
+      },
+
+      'John Berkey':{
+        'desc':'John Berkey',
+        'listenable':false,
+      },
+      
+      '':{
+        'desc':'',
+        'listenable':true,
+      },
+      
+    }
+
+    resolve(imgSources[imgFilename])
+  })
 }
 
 //return random image filename from path
