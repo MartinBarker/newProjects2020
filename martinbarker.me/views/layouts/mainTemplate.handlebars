@@ -275,7 +275,7 @@ font-size: 1.1rem;
 
     {{#if imgSrc}}
         <div id="caption">
-            <a href='{{imgSrc}}'>Source</a>
+            Source: <a href='{{imgSrc}}'>{{imgSrc}}</a>
         </div>
     {{/if}}
 
@@ -385,7 +385,7 @@ font-size: 1.1rem;
         <!-- sidenav top title -->
         <div id='sidebarTop' class="sidebar-header" style='background: {{backgroundColor1}}'>
             <!-- sidebar top title text -->
-            <h3 style='color: {{textColor1}}' style='text-size:22px'>Martin Barker</h3> 
+            <h3 style='color: {{textColor1}}' style='font-weight: bold; text-size:12px'><strong>Martin Barker</strong></h3> 
             <!-- sidebar expand/collapse button -->
             <button id='sidebarCollapse'>
                 <img src="https://img.icons8.com/ios-filled/24/000000/menu.png"/>
@@ -462,25 +462,17 @@ font-size: 1.1rem;
         <!-- sidenav bottom img source info -->
         <div id="pageColorsText" class='sidebar-footer'>
             <div class="sidebar-footer imageDetails">
-                
-                <button style="font-size:14px; cursor:pointer;">Play <i class="fa fa-play"></i></button>
-                <button style="font-size:14px; cursor:pointer;" id="refreshButton">Refresh colors</button> 
-                
-                <br> 
-                <!--
-                <img id='colorImageDisplay' src='static/assets/aesthetic-images/JohnBerkey.jpg' style='display:none' class="responsive" alt='image alt descr'>
-                -->
+                <!-- img display -->
                 <img id="colorImageDisplay" src="{{imgPath}}" style="display: block;" class="responsive" alt="image alt descr">
-
+                <!-- img colors -->
                 <div title="Vibrant: {{Vibrant}}" class="colorBox colorBox1" style="background: {{Vibrant}}"></div>
                 <div title="LightVibrant: {{LightVibrant}}" class="colorBox colorBox2" style='background: {{LightVibrant}}'></div>
                 <div title="DarkVibrant: {{DarkVibrant}}" class="colorBox colorBox3" style='background: {{DarkVibrant}}'></div>
                 <div title="Muted: {{Muted}}" class="colorBox colorBox4" style='background: {{Muted}}'></div>
                 <div title="LightMuted: {{LightMuted}}" class="colorBox colorBox5" style='background: {{LightMuted}}'></div>
                 <div title="DarkMuted: {{DarkMuted}}" class="colorBox colorBox6" style='background: {{DarkMuted}}'></div>
-                
-                
-
+                <!-- refresh colors button -->
+                <button style="font-size:14px; cursor:pointer;" id="refreshButton">Refresh colors</button> 
             </div>
             
         </div>
@@ -745,8 +737,11 @@ font-size: 1.1rem;
         }
         refreshButton.addEventListener('click', refreshPage)
 
+        
+
         //if clicking outside modal, close modal
         $(document).click(function (e) {
+            console.log('close modal')
             if ($(e.target).is('#imageModal')) {
                 $('#imageModal').fadeOut(500);
             }

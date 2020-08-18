@@ -6,7 +6,11 @@ var router = express.Router();
 app.get('/tagger', async function (req, res) {
   //get color data based on a random image from /static/assets/aesthetic-images
   let colorData = await getPageColorInfo()
-  console.log('/tagger colorData=',colorData)
+  console.log('/tagger imgListenable = ', colorData.listenable)
+
+  let lightMuted = colorData.colors['LightMuted'].hex; 
+  let lightMutedOpposite = LightenDarkenColor(colorData.colors['Vibrant'], 20);
+
 
   res.render('tagger', {
     //template layout to use
@@ -26,7 +30,7 @@ app.get('/tagger', async function (req, res) {
     //img path
     imgPath: colorData.imgPath,
     //img listenable bool
-    imgListenable: colorData.listenable,
+    //imgListenable: (colorData.listenable).toString(2),
     //img desc
     imgDesc: colorData.desc,
     //img src
@@ -37,45 +41,45 @@ app.get('/tagger', async function (req, res) {
     /* ~~~~~~~~~~~~~~~~~~~~~
       Side-Navbar Color Data
      ~~~~~~~~~~~~~~~~~~~~~ */
-    //navbar title text color
-    textColor1: 'blue',   
-    //navbar active tab text color
-    textColor2: 'white',
+    //'MARTIN BARKER' navbar title text color
+    textColor1: lightMutedOpposite, //colorData.colors['DarkMuted'].hex,   
+    // navbar active tab text color
+    textColor2: colorData.colors['LightVibrant'].hex,
     //navbar hover tab text color
-    textColor3: 'pink',
+    textColor3: colorData.colors['LightMuted'].hex,
     //navbar text color
-    textColor6: 'brown',
+    textColor6: colorData.colors['DarkMuted'].hex,
 
-    //navbar title background color
-    backgroundColor1: 'red',
+    //'MARTIN BARKER' navbar title background color
+    backgroundColor1: lightMuted, //colorData.colors['Vibrant'].hex,
     //navbar tab background color
-    backgroundColor2: 'yellow', //linear-gradient(90deg, {{LightVibrant}}, {{Muted}});
+    backgroundColor2: colorData.colors['LightVibrant'].hex, //linear-gradient(90deg, {{LightVibrant}}, {{Muted}});
     //navbar active tab background color
-    backgroundColor3: 'green', //linear-gradient(90deg, {{LightVibrant}}, {{LightMuted}})
+    backgroundColor3: colorData.colors['DarkMuted'].hex, //linear-gradient(90deg, {{LightVibrant}}, {{LightMuted}})
     //navbar hover tab background color
-    backgroundColor4: 'black',
+    backgroundColor4: colorData.colors['Vibrant'].hex,
 
     /* ~~~~~~~~~~~~~~~~~~~~~
       Page-Content Color Data
      ~~~~~~~~~~~~~~~~~~~~~ */
     //page body background color
-    backgroundColor5: 'white',
+    backgroundColor5: colorData.colors['DarkMuted'].hex,
     //page body title background color
-    backgroundColor6: 'pink',
+    backgroundColor6: colorData.colors['LightVibrant'].hex,
 
     //page body title text color
-    textColor4: 'green',
+    textColor4: colorData.colors['DarkMuted'].hex,
     //page body text color
-    textColor5: 'red',
+    textColor5: colorData.colors['LightVibrant'].hex,
     
 
     //img color display boxes
-    Vibrant: colorData.colors['Vibrant'],
-    LightVibrant: colorData.colors['LightVibrant'],
-    DarkVibrant: colorData.colors['DarkVibrant'],
-    Muted: colorData.colors['Muted'],
-    LightMuted: colorData.colors['LightMuted'],
-    DarkMuted: colorData.colors['DarkMuted'],
+    Vibrant: colorData.colors['Vibrant'].hex,
+    LightVibrant: colorData.colors['LightVibrant'].hex,
+    DarkVibrant: colorData.colors['DarkVibrant'].hex,
+    Muted: colorData.colors['Muted'].hex,
+    LightMuted: colorData.colors['LightMuted'].hex,
+    DarkMuted: colorData.colors['DarkMuted'].hex,
     
     
   });
@@ -128,7 +132,7 @@ async function getPageColorInfo() {
       let hexColor = rgbToHex(colorValue)
       //construct object
       var keyName = `${key}`
-      colors[keyName] = hexColor
+      colors[keyName] = {'hex':hexColor, 'rgb':colorValue}
     }
 
     //get source info
@@ -144,6 +148,51 @@ async function getPageColorInfo() {
       listen: sourceInfo.listen,
     })
   })
+}
+
+/*
+   Helper functions
+*/
+
+function LightenDarkenColor(col, amt) {
+  
+  var usePound = false;
+
+  if (col[0] == "#") {
+      col = col.slice(1);
+      usePound = true;
+  }
+
+  var num = parseInt(col,16);
+
+  var r = (num >> 16) + amt;
+
+  if (r > 255) r = 255;
+  else if  (r < 0) r = 0;
+
+  var b = ((num >> 8) & 0x00FF) + amt;
+
+  if (b > 255) b = 255;
+  else if  (b < 0) b = 0;
+
+  var g = (num & 0x0000FF) + amt;
+
+  if (g > 255) g = 255;
+  else if (g < 0) g = 0;
+
+  return (usePound?"#":"") + (g | (b << 8) | (r << 16)).toString(16);
+
+}
+
+function invertColor(hexTripletColor) {
+  var color = hexTripletColor;
+  color = color.substring(1);           // remove #
+  color = parseInt(color, 16);          // convert to integer
+  color = 0xFFFFFF ^ color;             // invert three bytes
+  color = color.toString(16);           // convert to hex
+  color = ("000000" + color).slice(-6); // pad with leading zeros
+  color = "#" + color;                  // prepend #
+  return color;
 }
 
 //convert rgb string to hex
@@ -182,14 +231,18 @@ function getSourceInfo(imgFilename){
         'listenable':false,
       },
       
-      '':{
-        'desc':'',
-        'listenable':true,
+      'apple1':{
+        'src':'http://www.macmothership.com/gallery/gallery3.html',
       },
       
     }
 
-    resolve(imgSources[imgFilename])
+    let imgSrcInfo = {}
+    if(imgSources[imgFilename]){
+      imgSrcInfo = imgSources[imgFilename]
+    }
+
+    resolve(imgSrcInfo)
   })
 }
 
