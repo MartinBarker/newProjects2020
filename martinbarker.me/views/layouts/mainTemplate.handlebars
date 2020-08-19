@@ -290,10 +290,6 @@ font-size: 1.1rem;
 
 
 <style>
-/* githubUrl hover */
-.githubUrl:hover{
-    color:rgb(60, 92, 233);
-}
 
 /* Style the Image Used to Trigger the Modal */
 #colorImageDisplay {
@@ -393,7 +389,7 @@ font-size: 1.1rem;
         </div>
 
         <!-- sidenav list of items -->
-        <ul class="list-unstyled components sideBarOption" style=''>
+        <ul class="list-unstyled components sideBarOption" style='background: {{backgroundColor7}}; color: {{textColor7}};'>
             <!-- about page -->
             <li>
                 <a href="#">About</a>
@@ -493,7 +489,7 @@ font-size: 1.1rem;
                     <div class="w-100"></div>
                     
                     <div class="col" style=''>
-                        <a class='githubUrl' target="_blank" href='{{pageBodyNavGithub}}'>Github</a>
+                        <a id='githubUrl' target="_blank" href='{{pageBodyNavGithub}}'>Github</a>
                     </div>
                 </div>
             </div>
@@ -501,7 +497,6 @@ font-size: 1.1rem;
                 <br>
                 <br>
                 <div class="row" style=' margin: auto;'>
-                   
                    {{{body}}}
                 </div>
                 
@@ -547,8 +542,13 @@ font-size: 1.1rem;
 
     async function setHoverColor(){
         var sheet = document.createElement('style')
-        //create css style rule for on-hover
+        //create css style rule for on-hover tab and on hover github url
         let innerHTMLHoverColorStyle = `
+            /* githubUrl hover */
+            #githubUrl:hover{
+                color:blue;
+            }
+
             #sidebar ul li a:hover { 
                 background: {{backgroundColor4}}; 
                 color: {{textColor3}};

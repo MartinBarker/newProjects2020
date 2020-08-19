@@ -8,8 +8,18 @@ app.get('/tagger', async function (req, res) {
   let colorData = await getPageColorInfo()
   console.log('/tagger imgListenable = ', colorData.listenable)
 
-  let lightMuted = colorData.colors['LightMuted'].hex; 
-  let lightMutedOpposite = LightenDarkenColor(colorData.colors['Vibrant'], 20);
+  let navbarHeaderColorObj = colorData.colors['LightMuted']
+  let navbarHeaderBackground = navbarHeaderColorObj.hex; 
+  let navbarHeaderText = getReadableTextColor(navbarHeaderColorObj.rgb)
+  //console.log("colorData.colors['LightMuted'].hex = ", colorData.colors['LightMuted'].rgb)
+  /*
+  if(((colorData.colors['LightMuted'].rgb[0])*0.299 + (colorData.colors['LightMuted'].rgb[1])*0.587 + (colorData.colors['LightMuted'].rgb[2])*0.114) > 186){
+    navbarHeaderText = "#000000"  
+  }else{
+    navbarHeaderText = "#ffffff"
+  }
+  */
+  //let navbarHeaderBackground = LightenDarkenColor(colorData.colors['Vibrant'], 20);
 
 
   res.render('tagger', {
@@ -24,7 +34,7 @@ app.get('/tagger', async function (req, res) {
     //set active current tab
     tagger: 'active',
     //body content title 
-    pageBodyNavTitle: 'Page Title',
+    pageBodyNavTitle: 'tagger.site',
     //body content github link
     pageBodyNavGithub: 'https://www.youtube.com/watch?v=0df7k__KEHw',
     //img path
@@ -38,39 +48,82 @@ app.get('/tagger', async function (req, res) {
     //img listen
     imgListen: colorData.listen,
 
+    /*----------
+      'Martin Barker' Navbar Header colors
+      ----------*/
+    textColor1: getReadableTextColor(colorData.colors['DarkMuted'].rgb), //background color
+    backgroundColor1: colorData.colors['DarkMuted'].hex,   //text color
+
+    /*----------
+      sidebar un-active tab colors
+      ----------*/ 
+    textColor6: getReadableTextColor(colorData.colors['LightVibrant'].rgb), //sidebar tab option text color
+    backgroundColor2: colorData.colors['LightVibrant'].hex,  //sidebar background color
+    
+    /*----------
+      sidebar active tab colors
+      ----------*/ 
+    textColor2: getReadableTextColor(colorData.colors['LightMuted'].rgb), //active tab text color
+    backgroundColor3: colorData.colors['LightMuted'].hex,
+
+    /*----------
+      sidebar lower background
+      ----------*/
+      textColor7: getReadableTextColor(colorData.colors['DarkVibrant'].rgb),
+      backgroundColor7: colorData.colors['DarkVibrant'].hex,  
+
+    /*----------
+      sidebar hover tab colors
+      ----------*/ 
+    textColor3: getReadableTextColor(colorData.colors['Vibrant'].rgb), //navbar hover tab text color
+    backgroundColor4: colorData.colors['Vibrant'].hex,
+    
+    /*----------
+      body header title colors
+      ----------*/
+    textColor4: getReadableTextColor(colorData.colors['Muted'].rgb),
+    backgroundColor6: colorData.colors['Muted'].hex,
+
+    /*----------
+      body colors
+      ----------*/
+    textColor5: getReadableTextColor(colorData.colors['LightMuted'].rgb),
+    backgroundColor5: colorData.colors['LightMuted'].hex,
+    
+
     /* ~~~~~~~~~~~~~~~~~~~~~
       Side-Navbar Color Data
      ~~~~~~~~~~~~~~~~~~~~~ */
     //'MARTIN BARKER' navbar title text color
-    textColor1: lightMutedOpposite, //colorData.colors['DarkMuted'].hex,   
-    // navbar active tab text color
-    textColor2: colorData.colors['LightVibrant'].hex,
-    //navbar hover tab text color
-    textColor3: colorData.colors['LightMuted'].hex,
+    //textColor1: navbarHeaderText, //colorData.colors['DarkMuted'].hex,   
+    
+    //textColor2: colorData.colors['DarkVibrant'].hex, // navbar active tab text color
+    
+    //textColor3: colorData.colors['LightMuted'].hex, //navbar hover tab text color
     //navbar text color
-    textColor6: colorData.colors['DarkMuted'].hex,
+    //textColor6: colorData.colors['DarkMuted'].hex,
 
     //'MARTIN BARKER' navbar title background color
-    backgroundColor1: lightMuted, //colorData.colors['Vibrant'].hex,
+    //backgroundColor1: navbarHeaderBackground, //colorData.colors['Vibrant'].hex,
     //navbar tab background color
-    backgroundColor2: colorData.colors['LightVibrant'].hex, //linear-gradient(90deg, {{LightVibrant}}, {{Muted}});
+    //backgroundColor2: colorData.colors['LightVibrant'].hex, //linear-gradient(90deg, {{LightVibrant}}, {{Muted}});
     //navbar active tab background color
-    backgroundColor3: colorData.colors['DarkMuted'].hex, //linear-gradient(90deg, {{LightVibrant}}, {{LightMuted}})
+    //backgroundColor3: colorData.colors['DarkMuted'].hex, //linear-gradient(90deg, {{LightVibrant}}, {{LightMuted}})
     //navbar hover tab background color
-    backgroundColor4: colorData.colors['Vibrant'].hex,
+    //backgroundColor4: colorData.colors['LightVibrant'].hex,
 
     /* ~~~~~~~~~~~~~~~~~~~~~
       Page-Content Color Data
      ~~~~~~~~~~~~~~~~~~~~~ */
     //page body background color
-    backgroundColor5: colorData.colors['DarkMuted'].hex,
+    
     //page body title background color
-    backgroundColor6: colorData.colors['LightVibrant'].hex,
+    
 
     //page body title text color
-    textColor4: colorData.colors['DarkMuted'].hex,
+    
     //page body text color
-    textColor5: colorData.colors['LightVibrant'].hex,
+    
     
 
     //img color display boxes
@@ -153,6 +206,14 @@ async function getPageColorInfo() {
 /*
    Helper functions
 */
+
+function getReadableTextColor(inputRGBcolor){
+  if(((inputRGBcolor[0])*0.299 + (inputRGBcolor[1])*0.587 + (inputRGBcolor[2])*0.114) > 186){
+    return("#000000")  
+  }else{
+    return("#ffffff")
+  }
+}
 
 function LightenDarkenColor(col, amt) {
   
