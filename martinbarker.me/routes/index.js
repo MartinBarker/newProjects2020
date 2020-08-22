@@ -11,16 +11,6 @@ app.get('/tagger', async function (req, res) {
   let navbarHeaderColorObj = colorData.colors['LightMuted']
   let navbarHeaderBackground = navbarHeaderColorObj.hex; 
   let navbarHeaderText = getReadableTextColor(navbarHeaderColorObj.rgb)
-  //console.log("colorData.colors['LightMuted'].hex = ", colorData.colors['LightMuted'].rgb)
-  /*
-  if(((colorData.colors['LightMuted'].rgb[0])*0.299 + (colorData.colors['LightMuted'].rgb[1])*0.587 + (colorData.colors['LightMuted'].rgb[2])*0.114) > 186){
-    navbarHeaderText = "#000000"  
-  }else{
-    navbarHeaderText = "#ffffff"
-  }
-  */
-  //let navbarHeaderBackground = LightenDarkenColor(colorData.colors['Vibrant'], 20);
-
 
   res.render('tagger', {
     //template layout to use
