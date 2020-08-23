@@ -1,0 +1,54 @@
+<script type="text/javascript" src="/static/assets/js/tagger.js"></script>
+<script src="https://unpkg.com/moment"></script>
+<br><br>
+
+<!-- page main content -->
+<div class="container-fluid">
+    <div class="row">
+        <!-- main content -->
+        <main role="main" class="col-md-9 ml-sm-5 col-lg-10 pt-3 px-4">
+            <div id="content">
+                <div id="post-content">
+                    <!-- Page Title / Intro -->
+                    <h1 class="widgettitle"><strong>tagger.site</strong></h1>
+                    <div>Select multiple audio files or input a Discogs URL, and you will a timestamped tracklist,perfect for YouTube videos! </div>
+                   
+                    <hr>
+                    <!-- Input Option 1 -->
+                    <h4 class="widgettitle"><strong>Input Option 1:</strong></h4>
+                    
+                        <form>
+                            <input type="text" placeholder='Discogs release URL' name="url" id="urlInput">
+                            <button id='urlInputButton' name="data" type="button" onclick="inputOption1(document.getElementById('urlInput').value)">Submit</button> Input a Discogs URL like <a href="https://www.discogs.com/Le-Car-Auto-Biography/release/41048">this</a>.
+                        </form>
+                        <hr>
+
+                        <!-- Input Option 2 -->
+                        <h4 class="widgettitle"><strong>Input Option 2:</strong></h4>
+                        <input type="file" id="file" multiple="multiple"/>
+                        <audio id="audio"></audio>
+                        <hr>
+
+                        <!-- Output -->
+
+                        <h4 class="widgettitle"><strong>Output:</strong></h4>
+                        
+                        <textarea id="inputBox" rows="4" cols="70" placeholder="Select an input method"></textarea>
+                       
+                        <br>
+                        <button id='copyToClipboarad' onclick="copyToClipboard('#inputBox')" type="button">Copy</button>
+                       
+
+        
+                        <!--
+                        <hr>
+                        <div>Contribute to this website <a href='https://github.com/MartinBarker/martinbarker.me'>here</a>.</div>
+                        <iframe width="560" height="315" src="https://www.youtube.com/embed/-BZf07TuGqY" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> 
+                        -->
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<br><br>
