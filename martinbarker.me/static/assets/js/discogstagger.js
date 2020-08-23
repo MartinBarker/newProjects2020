@@ -11,6 +11,8 @@ $(document).ready(function () {
         }
     });
 
+
+
     //when release artist slider changes
     $('#releaseArtistsSlider').on('input', function() {
         prepUpdateTagsBox()

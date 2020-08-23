@@ -40,7 +40,7 @@
 24:42 - 34:14 06 - the delta song
 34:14 - 39:35 07 - why "></textarea>
                 <button class="btn default copyButton" style="cursor: pointer;" id='copyToClipboarad'
-                    onclick="copyToClipboard('#inputBox')" type="button">Copy</button>
+                    onclick="copyToClipboard('inputBox')" type="button">Copy</button>
                 <div>
                     <table class="fixed h-100" align="left" style="table-layout: fixed; width: 533px; " height="100"
                         id="adjustments">
@@ -48,28 +48,23 @@
                             <!-- Columns -->
                             <tr>
                                 <th style="text-align:center; width: 6%;">
-                                    <select id="taggerOption1">
+                                    <select class='taggerOptions' id="taggerOption1">
                                         <option value="startTime" selected>startTime</option>
-                                        <option value="endTime">endTime</option>
                                         <option value="blank">(blank)</option>
                                     </select>
 
-                                    <select id="taggerOption2">
-                                        <option value="startTime">startTime</option>
-                                        <option value="endTime">endTime</option>
-                                        <option value="blank">(blank)</option>
+                                    <select class='taggerOptions' id="taggerOption2">
                                         <option value="dash" selected><a style="text-align:center;">-</a></option>
+                                        <option value="blank">(blank)</option>
                                     </select>
 
-                                    <select id="taggerOption3">
-                                        <option value="startTime">startTime</option>
+                                    <select class='taggerOptions' id="taggerOption3">
                                         <option value="endTime" selected>endTime</option>
                                         <option value="blank">(blank)</option>
-                                        <option value="dash"><a style="text-align:center;">-</a></option>
                                     </select>
 
-                                    <select id="taggerOption4">
-                                        <option value="filename">filename</option>
+                                    <select class='taggerOptions' id="taggerOption4">
+                                        <option value="title">title</option>
                                     </select>
                                 </th>
                             </tr>
@@ -86,8 +81,8 @@
             <div class='row'>
                 <textarea class="inputbox" id="tagsBox" rows="7" cols="44"
                     placeholder="Booker T. Jones,Priscilla Jones,Booker T & The MGs,The Mar-Keys,The Stax Staff,The Packers,The RCO All-Stars,Priscilla Coolidge,Booker T. & Priscilla,1971,France,The Wedding Song,She,The Indian Song,Sea Gull,For Priscilla,The Delta  Song,Why,Mississippi Voodoo,Cool  Black Dream,Sweet Child Youre Not Alone,Booker T. & Priscilla 1971,Booker T. Jones 1971,"></textarea>
-                <button class="btn default copyButton" style="cursor: pointer;" id='copyToClipboarad'
-                    onclick="copyToClipboard('#inputBox')" type="button">Copy</button>
+                <button class="btn default copyButton" style="cursor: pointer;" id='copyToClipboard'
+                    onclick="copyToClipboard('tagsBox')" type="button">Copy</button>
                 <div>
                     <table class="fixed h-100" align="left" style="table-layout: fixed; width: 533px; " height="100"
                         id="adjustments">
@@ -175,6 +170,7 @@
                 </div>
             </div>
         </div>
+        <div id="charCount">Number of characters: 0</div>
 
         <style>
             table {
