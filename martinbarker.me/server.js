@@ -2,6 +2,8 @@
 const express = require('express');
 const app = express();
 var router = express.Router();
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
 
 //port and hosting info
 const port = 3000;
@@ -19,22 +21,52 @@ const handlebars = require('express-handlebars');
 //Sets our app to use the handlebars engine
 app.set('view engine', 'handlebars');
 
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
+
 //Sets handlebars configurations (we will go through them later on)
 app.engine('handlebars', handlebars({
     layoutsDir: __dirname + '/views/layouts',
     helpers: {
         'ifEquals': function (arg1, arg2, options) {
             return (arg1 == arg2) ? options.fn(this) : options.inverse(this);
+        },
+        'ifActiveId': function (arg1, arg2, options) {
+            console.log('ifActiveId: options=',options)
             //return (arg1 == arg2) ? options.fn(this) : options.inverse(this);
+            return true;
         }
-        
-
     },
-    
 }));
 
 //Tells app to use '/public' folder for static files
 app.use(express.static('public'))
+
+mongoose.connect('mongodb://localhost:27017/node-blog', { useUnifiedTopology: true, useNewUrlParser: true })
+    .then(() => 'You are now connected to Mongo!')
+    .catch(err => console.error('Something went wrong', err))
+
+//store post
+const Post = require('./database/models/Post');
+app.post('/posts/store', (req, res) => {
+    Post.create(req.body, (error, post) => {
+        res.redirect('/tagger')
+    })
+});
+
+
+
+//retrieve posts
+app.get('/posts', async (req, res) => {
+    const posts = await Post.find({})
+    console.log('/posts posts = ', posts)
+    res.render('post', {
+        layout: 'mainTemplate', 
+        posts: posts,
+    })
+});
 
 //connect all routes
 const routes = require('./routes');

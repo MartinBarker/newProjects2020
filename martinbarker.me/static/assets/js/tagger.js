@@ -287,6 +287,9 @@ async function generateDiscogsTags(discogsReleaseData) {
     tagsJsonGlobal = jsonResults;
     tagsJsonDisplay = jsonResults;
 
+    //set textbox palceholder to equal nothing
+    document.getElementById("tagsBox").placeholder = "";
+
     //convert tags json object to comma seperated string var
     var tagsAll = getAllTags(jsonResults);
 

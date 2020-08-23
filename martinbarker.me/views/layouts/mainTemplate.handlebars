@@ -392,12 +392,22 @@ font-size: 1.1rem;
         <ul class="list-unstyled components sideBarOption" style='background: {{backgroundColor7}}; color: {{textColor7}};'>
             <!-- about page -->
             <li>
-                <a href="#">About</a>
+                <a 
+                {{#ifEquals about 'active'}}
+                    style='background: {{backgroundColor3}}; color: {{textColor2}};'
+                {{/ifEquals}}
+                href="/" class='navbarItem'>About
+                </a>
             </li>
             <!-- projects dropdown -->
             <li>
                 <a href="#projectsSubmenu" data-toggle="collapse" class="dropdown-toggle ">Projects</a>
-                <ul class="collapse list-unstyled show " id="projectsSubmenu">
+                
+                <ul class="collapse list-unstyled 
+                {{#ifEquals projects 'active'}}
+                    show
+                {{/ifEquals}} 
+                " id="projectsSubmenu">
                     <!-- tagger.site -->
                     <li>
                         <a 
@@ -436,21 +446,30 @@ font-size: 1.1rem;
             </li>
             <!-- blog dropdown -->
             <li>
-                <a href="#blogSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Blog</a>
+                
+                <a href="#blogSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Blog
+                </a>
                 <!-- blog posts -->
-                <ul class="collapse list-unstyled" id="blogSubmenu">
-                    <li>
-                        <a href="#">Post 1</a>
-                    </li>
-                    <li>
-                        <a href="#">Post 3</a>
-                    </li>
-                    <li>
-                        <a href="#">Post 4</a>
-                    </li>
-                    <li>
-                        <a href="#">Post 5</a>
-                    </li>
+                <ul class="collapse list-unstyled 
+                    {{#ifEquals blog 'active'}}
+                        show
+                    {{/ifEquals}} 
+                " id="blogSubmenu">
+                    
+                    
+                    {{#each posts}}
+                        <a 
+                        {{#ifEquals activeTab 'true'}} 
+                            style='background: {{activeTabColor}}!important; color: {{activeTabTextColor}};'
+                        {{/ifEquals}}
+
+                        
+                        class='navbarItem' href="/posts/{{id}}">{{title}}</a>
+                        
+                   
+
+                        </li>
+                    {{/each}}
                 </ul>
             </li>
         </ul>
@@ -489,7 +508,7 @@ font-size: 1.1rem;
                     <div class="w-100"></div>
                     
                     <div class="col" style=''>
-                        <a id='githubUrl' target="_blank" href='{{pageBodyNavGithub}}'>Github</a>
+                        <a id='githubUrl' target="_blank" href='{{pageBodyNavGithub}}'>View code for this page</a>
                     </div>
                 </div>
             </div>
@@ -546,7 +565,7 @@ font-size: 1.1rem;
         let innerHTMLHoverColorStyle = `
             /* githubUrl hover */
             #githubUrl:hover{
-                color:blue;
+                color:{{DarkMuted}};
             }
 
             #sidebar ul li a:hover { 
