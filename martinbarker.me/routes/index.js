@@ -200,6 +200,8 @@ async function getMainTemplateData(activeTabId){
         textColor1: getReadableTextColor(colorData.colors['DarkMuted'].rgb), 
         backgroundColor1: colorData.colors['DarkMuted'].hex,   
         textColor2: getReadableTextColor(colorData.colors['LightMuted'].rgb), //active tab text color
+        backgroundColor2: colorData.colors['LightVibrant'].hex,
+        textColor6:getReadableTextColor(colorData.colors['LightVibrant'].rgb),
         backgroundColor3: colorData.colors['LightMuted'].hex,
         textColor7: getReadableTextColor(colorData.colors['DarkVibrant'].rgb),
         backgroundColor7:  colorData.colors['DarkVibrant'].hex,

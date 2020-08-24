@@ -1,6 +1,115 @@
 <script type="text/javascript" src="/static/assets/js/tagger.js"></script>
 <script src="https://unpkg.com/moment"></script>
 
+{{!--
+<div class="container-fluid" style='color: #000000'>
+
+    <div style="margin-top:-30px;">
+
+        <!-- discogstagger output -->
+        <hr>
+        <h3>Comma-Separated Metadata Tags:</h3>
+        <div class='outputDiscogstaggerBox' style='margin-left:15px;'>
+            <div class='row'>
+                <textarea class="inputbox" id="tagsBox" rows="7" cols="44" placeholder="Booker T. Jones,Priscilla Jones,Booker T & The MGs,The Mar-Keys,The Stax Staff,The Packers,The RCO All-Stars,Priscilla Coolidge,Booker T. & Priscilla,1971,France,The Wedding Song,She,The Indian Song,Sea Gull,For Priscilla,The Delta  Song,Why,Mississippi Voodoo,Cool  Black Dream,Sweet Child Youre Not Alone,Booker T. & Priscilla 1971,Booker T. Jones 1971,"></textarea>
+                <button class="btn default copyButton" style="cursor: pointer; max-width: 60px; width: 100%;" id='copyToClipboarad' onclick="copyToClipboard('#inputBox')" type="button">Copy</button>
+                <div>
+                    <table class="fixed h-100" align="left" style="white-space:nowrap; table-layout: fixed; max-width: 533px;" height="100"
+                        id="adjustments">
+                        <tbody>
+                            <!-- Columns -->
+                            <tr>
+                                <th style="text-align:center; width: 6%;"><input type="checkbox" id='selectAll' checked>
+                                </th>
+                                <th style="text-align:center; width: 25%;">Tags Type</th>
+                                <th style="text-align:center; width: 46%;">Tags</th>
+                            </tr>
+
+                            <!-- Artists -->
+                            <tr>
+                                <td style="text-align:center;">
+                                    <input type="checkbox" class="releaseArtistsCheckbox" id="releaseArtistsCheckbox"
+                                        checked="" onchange="prepUpdateTagsBox()">
+                                </td>
+                                <td style="text-align:center;">Release Artist(s)</td>
+                                <td>
+                                    <div style="text-align:center;">
+                                        <input type="range" class="releaseArtistsSlider" id="releaseArtistsSlider"
+                                            min="0" max="100" value="100" onchange="prepUpdateTagsBox()">
+                                        <div class='float-left' id="releaseArtistsSliderValue">100%
+                                        </div>
+                                        <div class='float-right' id='releaseArtistsNumber'>0 chars
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Release Info -->
+                            <tr>
+                                <td style="text-align:center;">
+                                    <input type="checkbox" class="releaseInfoCheckbox" id="releaseInfoCheckbox"
+                                        checked="" onchange="prepUpdateTagsBox()">
+                                </td>
+                                <td style="text-align:center;">Release Info</td>
+                                <td>
+                                    <div style="text-align:center;">
+                                        <input type="range" class="releaseInfoSlider" id="releaseInfoSlider" min="0"
+                                            max="100" value="100" onchange="prepUpdateTagsBox()">
+                                        <div class='float-left' id="releaseInfoSliderValue">100%</div>
+                                        <div class='float-right' id='releaseInfoNumber'>0 chars</div>
+                                    </div>
+                                </td>
+
+                            </tr>
+
+                            <!-- Tracklist -->
+                            <tr>
+                                <td style="text-align:center;">
+                                    <input type="checkbox" class="tracklistCheckbox" id="tracklistCheckbox" checked=""
+                                        onchange="prepUpdateTagsBox()">
+                                </td>
+                                <td style="text-align:center;">Tracklist</td>
+                                <td>
+                                    <div style="text-align:center;">
+                                        <input type="range" class="tracklistSlider" id="tracklistSlider" min="0"
+                                            max="100" value="100" onchange="prepUpdateTagsBox()">
+                                        <div class='float-left' id="tracklistSliderValue">100%</div>
+                                        <div class='float-right' id='tracklistNumber'>0 chars</div>
+                                    </div>
+                                </td>
+
+                            </tr>
+
+                            <!-- Combinations -->
+                            <tr>
+                                <td style="text-align:center;">
+                                    <input type="checkbox" class="combinationsCheckbox" id="combinationsCheckbox"
+                                        checked="" onchange="prepUpdateTagsBox()">
+                                </td>
+                                <td style="text-align:center;">Combinations</td>
+                                <td>
+                                    <div style="text-align:center;">
+                                        <input type="range" class="combinationsSlider" id="combinationsSlider" min="0"
+                                            max="100" value="100" onchange="prepUpdateTagsBox()">
+                                        <div class='float-left' id="combinationsSliderValue">100%</div>
+                                        <div class='float-right' id='combinationsNumber'>0 chars</div>
+                                    </div>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+
+</div>
+ --}}
+
 <!-- page main content -->
 <div class="container-fluid" style='color: {{textColor5}}'>
 
@@ -39,10 +148,9 @@
 20:30 - 24:42 05 - for priscilla
 24:42 - 34:14 06 - the delta song
 34:14 - 39:35 07 - why "></textarea>
-                <button class="btn default copyButton" style="cursor: pointer;" id='copyToClipboarad'
-                    onclick="copyToClipboard('inputBox')" type="button">Copy</button>
+                <button class="btn default copyButton" style="cursor: pointer; max-width: 70px; width: 100%;" id='copyToClipboarad' onclick="copyToClipboard('inputBox')" type="button">Copy</button>
                 <div>
-                    <table class="fixed h-100" align="left" style="table-layout: fixed; width: 533px; " height="100"
+                    <table class="fixed h-100" align="left" style="white-space:nowrap; table-layout: fixed; max-width: 533px;" height="100"
                         id="adjustments">
                         <tbody>
                             <!-- Columns -->
@@ -79,12 +187,10 @@
         <h3>Comma-Separated Discogs Tags:</h3>
         <div class='outputDiscogstaggerBox' style='margin-left:15px;'>
             <div class='row'>
-                <textarea class="inputbox" id="tagsBox" rows="7" cols="44"
-                    placeholder="Booker T. Jones,Priscilla Jones,Booker T & The MGs,The Mar-Keys,The Stax Staff,The Packers,The RCO All-Stars,Priscilla Coolidge,Booker T. & Priscilla,1971,France,The Wedding Song,She,The Indian Song,Sea Gull,For Priscilla,The Delta  Song,Why,Mississippi Voodoo,Cool  Black Dream,Sweet Child Youre Not Alone,Booker T. & Priscilla 1971,Booker T. Jones 1971,"></textarea>
-                <button class="btn default copyButton" style="cursor: pointer;" id='copyToClipboard'
-                    onclick="copyToClipboard('tagsBox')" type="button">Copy</button>
+                <textarea class="inputbox" id="tagsBox" rows="7" cols="44" placeholder="Booker T. Jones,Priscilla Jones,Booker T & The MGs,The Mar-Keys,The Stax Staff,The Packers,The RCO All-Stars,Priscilla Coolidge,Booker T. & Priscilla,1971,France,The Wedding Song,She,The Indian Song,Sea Gull,For Priscilla,The Delta  Song,Why,Mississippi Voodoo,Cool  Black Dream,Sweet Child Youre Not Alone,Booker T. & Priscilla 1971,Booker T. Jones 1971,"></textarea>
+                <button class="btn default copyButton" style="cursor: pointer; max-width: 70px; width: 100%;" id='copyToClipboarad' onclick="copyToClipboard('tagsBox')" type="button">Copy</button>
                 <div>
-                    <table class="fixed h-100" align="left" style="table-layout: fixed; width: 533px; " height="100"
+                    <table class="fixed h-100" align="left" style="white-space:nowrap; table-layout: fixed; max-width: 533px;" height="100"
                         id="adjustments">
                         <tbody>
                             <!-- Columns -->
@@ -106,8 +212,10 @@
                                     <div style="text-align:center;">
                                         <input type="range" class="releaseArtistsSlider" id="releaseArtistsSlider"
                                             min="0" max="100" value="100" onchange="prepUpdateTagsBox()">
-                                        <div class='float-left' id="releaseArtistsSliderValue">100%</div>
-                                        <div class='float-right' id='releaseArtistsNumber'>0 chars </div>
+                                        <div class='float-left' id="releaseArtistsSliderValue">100%
+                                        </div>
+                                        <div class='float-right' id='releaseArtistsNumber'>0 chars
+                                        </div>
                                     </div>
                                 </td>
                             </tr>
@@ -173,21 +281,19 @@
         <div id="charCount">Number of characters: 0</div>
 
         <style>
-            table {
-                table-layout: fixed;
-                width: 100px;
-            }
+            
 
             .copyButton {
                 border: 2px solid black;
             }
 
-            table,
-            th,
-            td {
+            table, th, td {
                 border: 2px solid black;
                 background: white;
-                color: black;
+                color:black;
+                height: 100%;
+                white-space: normal;
+                word-wrap: break-word;
             }
 
             textarea {
@@ -195,6 +301,6 @@
                 /* font-size: 18px; */
             }
         </style>
-
+    {{!-- --}}
     </div>
 </div>
