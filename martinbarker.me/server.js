@@ -44,21 +44,33 @@ app.engine('handlebars', handlebars({
 //Tells app to use '/public' folder for static files
 app.use(express.static('public'))
 
+/*
+console.log('begin mongodb connection')
+const MongoClient = require('mongodb').MongoClient;
+const uri = "mongodb+srv://dbUser:dbUserPassword@cluster0.qotrh.gcp.mongodb.net/node-blog?retryWrites=true&w=majority";
+const client = new MongoClient(uri, { useUnifiedTopology: true, useNewUrlParser: true });
+console.log('client created')
+client.connect(err => {
+  const collection = client.db("test").collection("devices");
+  // perform actions on the collection object
+  client.close();
+});
+console.log('after client connect code')
+
 mongoose.connect('mongodb://localhost:27017/node-blog', { useUnifiedTopology: true, useNewUrlParser: true })
     .then(() => 'You are now connected to Mongo!')
     .catch(err => console.error('Something went wrong', err))
 
 //store post
-const Post = require('./database/models/Post');
+
 app.post('/posts/store', (req, res) => {
     Post.create(req.body, (error, post) => {
         res.redirect('/tagger')
     })
 });
 
-
-
 //retrieve posts
+const Post = require('./database/models/Post');
 app.get('/posts', async (req, res) => {
     const posts = await Post.find({})
     console.log('/posts posts = ', posts)
@@ -67,7 +79,7 @@ app.get('/posts', async (req, res) => {
         posts: posts,
     })
 });
-
+*/
 //connect all routes
 const routes = require('./routes');
 app.use('/', routes);

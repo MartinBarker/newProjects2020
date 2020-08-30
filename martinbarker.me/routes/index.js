@@ -60,9 +60,9 @@ app.get('/posts/:id', async (req, res) => {
 app.get('/', async function (req, res) {
   //get mainTemplate data
   let mainTemplateData = await getMainTemplateData(req.params.id)
-  const post = await Post.findById(req.params.id)
+  //const post = await Post.findById(req.params.id)
   let displayPosts = mainTemplateData.postsDisplay;
-
+ 
   res.render('about', {
     //template layout to use
     layout: 'mainTemplate', 
@@ -192,7 +192,7 @@ async function getMainTemplateData(activeTabId){
     //get color data based on a random image from /static/assets/aesthetic-images
     let colorData = await getColorData()
     //get display title for each blog post
-    let postsDisplay = await getPostsDisplay(colorData.colors['LightMuted'].hex, activeTabId, getReadableTextColor(colorData.colors['LightMuted'].rgb))
+    //let postsDisplay = await getPostsDisplay(colorData.colors['LightMuted'].hex, activeTabId, getReadableTextColor(colorData.colors['LightMuted'].rgb))
 
     let mainTemplateData = {
       colorDataRaw:colorData,
@@ -223,7 +223,7 @@ async function getMainTemplateData(activeTabId){
       imgSrc:colorData.src,
       imgListen:colorData.listen,
       
-      postsDisplay:postsDisplay
+      postsDisplay:[{"title":'postsDisplay'}]
     }
     resolve(mainTemplateData)
   })
