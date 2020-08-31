@@ -44,6 +44,105 @@ app.engine('handlebars', handlebars({
 //Tells app to use '/public' folder for static files
 app.use(express.static('public'))
 
+const MongoClient = require('mongodb').MongoClient;
+const url = "mongodb+srv://dbUser:dbUserPassword@cluster0.qotrh.gcp.mongodb.net/node-blog?retryWrites=true&w=majority";
+
+// Connect to the db
+MongoClient.connect(url, (err, client) => {
+    if(!err){
+        console.log("We are connected");
+        // Client returned
+        var db = client.db('node-blog');
+        var collection = db.collection("posts");
+
+        //find single post 
+        /*
+        collection.findOne({}, function(err, result) {
+            if(err){
+                console.log('collection find err = ', err)
+            }else{
+                console.log('result = ', result);
+            }    
+          });
+          */
+
+        //find all posts
+        var cursor = db.collection('posts').find();
+        // Execute the each command, triggers for each document
+        cursor.each(function(err, item) {
+            // If the item is null then the cursor is exhausted/empty and closed
+            if(item == null) {
+                return;
+            }
+            // otherwise, do something with the item
+            console.log('item = ', item)
+        });
+
+    }else{
+        console.log("not connected, err = ", err);
+    }
+
+});
+
+/*
+MongoClient.connect(url, function(err, db) {
+  if(!err) {
+    console.log("We are connected");
+    const client = new MongoClient(url, { useUnifiedTopology: true, useNewUrlParser: true });
+    const collection = client.db("node-blog").collection("posts");
+    console.log('collection =', collection); 
+  }else{
+      console.log('err = ', err)
+  }
+});
+
+client.connect(err => {
+    if(!err){
+        console.log("We are connected");  
+    }else{
+        console.log('err = ', err)
+    }
+    var cursor = client.collection('posts').find();
+    console.log('cursor =', cursor); 
+});
+
+const client = new MongoClient(url, { useUnifiedTopology: true, useNewUrlParser: true });
+
+var cursor = client.db.collection('posts').find();
+
+// Execute the each command, triggers for each document
+cursor.each(function(err, item) {
+    // If the item is null then the cursor is exhausted/empty and closed
+    if(item == null) {
+        db.close(); // you may not want to close the DB if you have more code....
+        return;
+    }
+    // otherwise, do something with the item
+});
+
+  client.connect(err => {
+    const collection = client.db("node-blog").collection("posts");
+    collection.findOne({title: 'blogPost1'}, function(err, document) {
+    console.log('document =', document); //title:blogPost1"
+    });
+    
+    //const post = collection.findById('5f4c1b0274e9b50f5e2b32c7')
+  
+    // perform actions on the collection object
+    client.close();
+  });
+
+client.connect(err => {
+  const collection = client.db("node-blog").collection("posts");
+  console.log('collection = ', collection)
+  
+  //const post = collection.findById('5f4c1b0274e9b50f5e2b32c7')
+
+  // perform actions on the collection object
+  client.close();
+});
+*/
+
 /*
 console.log('begin mongodb connection')
 const MongoClient = require('mongodb').MongoClient;
