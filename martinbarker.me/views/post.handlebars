@@ -1,6 +1,14 @@
-test lmao
-{{posts}}
+<div class="container-fluid" style='color: {{textColor5}}'>
+    Posted:{{postDate}}
 
-ietem obj:
+    Description: {{postDescription}}
 
-{{testObj.newItem}}
+    Content: <div id='postContent'></div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        console.log('setting innerhtml')
+        document.getElementById('postContent').innerHTML = `{{{postContent}}}`
+    })
+</script>

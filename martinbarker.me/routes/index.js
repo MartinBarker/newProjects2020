@@ -4,26 +4,38 @@ var router = express.Router();
 //nodejs virbant color picker extension
 var Vibrant = require('node-vibrant')
 const Post = require('../database/models/Post.js');
+//connect to mongodb
+var mongoUtil = require( '../static/assets/js/mongoUtils' );
+
+//global vars
+allBlogPosts = []
 
 //view single blog post
 app.get('/posts/:id', async (req, res) => {
   //get mainTemplate data
   let mainTemplateData = await getMainTemplateData(req.params.id)
-  const post = await Post.findById(req.params.id)
+  //get post
+  let post = null;
+  for(var i = 0; i < allBlogPosts.length; i++){
+    if(allBlogPosts[i]['_id'] == req.params.id){
+      post = allBlogPosts[i]
+    }
+  }
+  //get displayposts
   let displayPosts = mainTemplateData.postsDisplay;
 
   res.render('post', {
       layout: 'mainTemplate', 
-      posts: post,
-      pageTitle:'x',
+      post: post,
+      pageTitle:post.title,
       blog:'active',
-      //icon:'z',
-      blog:'active',
-      pageBodyNavTitle: 'blog post title',
+      //icon:'z',,
+      pageBodyNavTitle: `${post.title}`,
       pageBodyNaavGithub: 'x',
-      postTitle:'a',
-      postDescription: 'b',
-      postContent:'c',
+      postTitle: post.title,
+      postDescription: post.description,
+      postContent: post.content,
+      postDate: post.createdAt,
       //list to display for navbar 'Blog' options
       posts:displayPosts,
       //mainTemplateData
@@ -54,6 +66,7 @@ app.get('/posts/:id', async (req, res) => {
       DarkMuted: mainTemplateData.colorData.DarkMuted, 
       
   })
+  
 });
 
 //home route
@@ -111,7 +124,7 @@ app.get('/', async function (req, res) {
 app.get('/tagger', async function (req, res) {
   //get mainTemplate data
   let mainTemplateData = await getMainTemplateData(req.params.id)
-  const post = await Post.findById(req.params.id)
+  
   let displayPosts = mainTemplateData.postsDisplay;
 
   res.render('tagger', {
@@ -192,7 +205,7 @@ async function getMainTemplateData(activeTabId){
     //get color data based on a random image from /static/assets/aesthetic-images
     let colorData = await getColorData()
     //get display title for each blog post
-    //let postsDisplay = await getPostsDisplay(colorData.colors['LightMuted'].hex, activeTabId, getReadableTextColor(colorData.colors['LightMuted'].rgb))
+    let postsDisplay = await getPostsDisplay(colorData.colors['LightMuted'].hex, activeTabId, getReadableTextColor(colorData.colors['LightMuted'].rgb))
 
     let mainTemplateData = {
       colorDataRaw:colorData,
@@ -223,7 +236,7 @@ async function getMainTemplateData(activeTabId){
       imgSrc:colorData.src,
       imgListen:colorData.listen,
       
-      postsDisplay:[{"title":'postsDisplay'}]
+      postsDisplay:postsDisplay,
     }
     resolve(mainTemplateData)
   })
@@ -231,18 +244,29 @@ async function getMainTemplateData(activeTabId){
 
 async function getPostsDisplay(activeTabColorHex, activeTabId, activeTabTextColor){
   return new Promise(async function (resolve, reject) {
-    const posts = await Post.find({})
     let postsDisplay = []
-    for(var i = 0; i < posts.length; i++){
-      let tempObj = null;
-      if(activeTabId == posts[i]._id){
-        tempObj = {title:posts[i].title, id:posts[i]._id, activeTabTextColor:activeTabTextColor, activeTabColor:activeTabColorHex, activeTab:'true'}
-      }else{
-        tempObj = {title:posts[i].title, id:posts[i]._id}
-      }
-      postsDisplay.push(tempObj)
-    }
-    resolve(postsDisplay)
+    
+    var db = mongoUtil.getDb();
+    var cursor = db.collection('posts').find();
+    // Execute the each command, triggers for each document
+    cursor.each(function(err, item) {
+        // If the item is null then the cursor is exhausted/empty and closed
+        if(item == null) {
+          resolve(postsDisplay)
+            return;
+        }
+        // otherwise, do something with the item
+        allBlogPosts.push(item)
+        let tempObj = null;
+        if(activeTabId == item._id){
+          tempObj = {'title':item.title, 'id':item._id, 'activeTabTextColor':activeTabTextColor, 'activeTabColor':activeTabColorHex, 'activeTab':'true'}
+        }else{
+          tempObj = {'title':item.title, 'id':item._id}
+        }
+        
+        postsDisplay.push(tempObj)
+    });
+   
   })
 }
 
