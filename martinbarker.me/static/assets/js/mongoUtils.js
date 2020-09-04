@@ -13,7 +13,7 @@ module.exports = {
   },
 
   getDb: function() {
-    console.log('returning _db = ', _db)
+    //console.log('returning _db = ', _db)
     return _db;
   }
 };

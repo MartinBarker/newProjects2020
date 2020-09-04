@@ -247,9 +247,11 @@ async function getPostsDisplay(activeTabColorHex, activeTabId, activeTabTextColo
     let postsDisplay = []
     
     var db = mongoUtil.getDb();
-    var cursor = db.collection('posts').find();
-    // Execute the each command, triggers for each document
-    cursor.each(function(err, item) {
+    try{
+      //get db
+      var cursor = db.collection('posts').find();
+      // Execute the each command, triggers for each document
+      cursor.each(function(err, item) {
         // If the item is null then the cursor is exhausted/empty and closed
         if(item == null) {
           resolve(postsDisplay)
@@ -266,6 +268,12 @@ async function getPostsDisplay(activeTabColorHex, activeTabId, activeTabTextColo
         
         postsDisplay.push(tempObj)
     });
+    }catch(err){
+      console.log('err getting posts db collection')
+      resolve([])
+    }
+    
+    
    
   })
 }
