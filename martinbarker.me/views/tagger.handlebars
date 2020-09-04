@@ -39,10 +39,9 @@
 20:30 - 24:42 05 - for priscilla
 24:42 - 34:14 06 - the delta song
 34:14 - 39:35 07 - why "></textarea>
-                <button class="btn default copyButton" style="cursor: pointer;" id='copyToClipboarad'
-                    onclick="copyToClipboard('inputBox')" type="button">Copy</button>
+                <button class="btn default copyButton" style="cursor: pointer; max-width: 70px; width: 100%;" id='copyToClipboarad' onclick="copyToClipboard('inputBox')" type="button">Copy</button>
                 <div>
-                    <table class="fixed h-100" align="left" style="table-layout: fixed; width: 533px; " height="100"
+                    <table class="fixed h-100" align="left" style="white-space:nowrap; table-layout: fixed; max-width: 533px;" height="100"
                         id="adjustments">
                         <tbody>
                             <!-- Columns -->
@@ -76,15 +75,13 @@
 
         <!-- discogstagger output -->
         <hr>
-        <h3>Comma-Separated Metadata Tags:</h3>
+        <h3>Comma-Separated Discogs Tags:</h3>
         <div class='outputDiscogstaggerBox' style='margin-left:15px;'>
             <div class='row'>
-                <textarea class="inputbox" id="tagsBox" rows="7" cols="44"
-                    placeholder="Booker T. Jones,Priscilla Jones,Booker T & The MGs,The Mar-Keys,The Stax Staff,The Packers,The RCO All-Stars,Priscilla Coolidge,Booker T. & Priscilla,1971,France,The Wedding Song,She,The Indian Song,Sea Gull,For Priscilla,The Delta  Song,Why,Mississippi Voodoo,Cool  Black Dream,Sweet Child Youre Not Alone,Booker T. & Priscilla 1971,Booker T. Jones 1971,"></textarea>
-                <button class="btn default copyButton" style="cursor: pointer;" id='copyToClipboard'
-                    onclick="copyToClipboard('tagsBox')" type="button">Copy</button>
+                <textarea class="inputbox" id="tagsBox" rows="7" cols="44" placeholder="Booker T. Jones,Priscilla Jones,Booker T & The MGs,The Mar-Keys,The Stax Staff,The Packers,The RCO All-Stars,Priscilla Coolidge,Booker T. & Priscilla,1971,France,The Wedding Song,She,The Indian Song,Sea Gull,For Priscilla,The Delta  Song,Why,Mississippi Voodoo,Cool  Black Dream,Sweet Child Youre Not Alone,Booker T. & Priscilla 1971,Booker T. Jones 1971,"></textarea>
+                <button class="btn default copyButton" style="cursor: pointer; max-width: 70px; width: 100%;" id='copyToClipboarad' onclick="copyToClipboard('tagsBox')" type="button">Copy</button>
                 <div>
-                    <table class="fixed h-100" align="left" style="table-layout: fixed; width: 533px; " height="100"
+                    <table class="fixed h-100" align="left" style="white-space:nowrap; table-layout: fixed; max-width: 533px;" height="100"
                         id="adjustments">
                         <tbody>
                             <!-- Columns -->
@@ -106,8 +103,10 @@
                                     <div style="text-align:center;">
                                         <input type="range" class="releaseArtistsSlider" id="releaseArtistsSlider"
                                             min="0" max="100" value="100" onchange="prepUpdateTagsBox()">
-                                        <div class='float-left' id="releaseArtistsSliderValue">100%</div>
-                                        <div class='float-right' id='releaseArtistsNumber'>0 chars </div>
+                                        <div class='float-left' id="releaseArtistsSliderValue">100%
+                                        </div>
+                                        <div class='float-right' id='releaseArtistsNumber'>0 chars
+                                        </div>
                                     </div>
                                 </td>
                             </tr>
@@ -173,21 +172,19 @@
         <div id="charCount">Number of characters: 0</div>
 
         <style>
-            table {
-                table-layout: fixed;
-                width: 100px;
-            }
+            
 
             .copyButton {
                 border: 2px solid black;
             }
 
-            table,
-            th,
-            td {
+            table, th, td {
                 border: 2px solid black;
                 background: white;
-                color: black;
+                color:black;
+                height: 100%;
+                white-space: normal;
+                word-wrap: break-word;
             }
 
             textarea {
@@ -195,6 +192,6 @@
                 /* font-size: 18px; */
             }
         </style>
-
+    {{!-- --}}
     </div>
 </div>

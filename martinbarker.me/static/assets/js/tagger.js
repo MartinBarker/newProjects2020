@@ -287,6 +287,9 @@ async function generateDiscogsTags(discogsReleaseData) {
     tagsJsonGlobal = jsonResults;
     tagsJsonDisplay = jsonResults;
 
+    //set textbox palceholder to equal nothing
+    document.getElementById("tagsBox").placeholder = "";
+
     //convert tags json object to comma seperated string var
     var tagsAll = getAllTags(jsonResults);
 
@@ -397,9 +400,11 @@ async function getCombinationTags(discogsReleaseData){
         //artist_sort
         let artist = removeNumberParenthesis(discogsReleaseData.artists_sort)
         //style
-        let style = discogsReleaseData.styles[0]
+        let style=''
+        if(discogsReleaseData.styles){ style = discogsReleaseData.styles[0] }
         //genre
-        let genre = discogsReleaseData.genres[0]
+        let genre=''
+        if(discogsReleaseData.genres){ genre = discogsReleaseData.genres[0] }
 
         //create tags to combine and push:
         comboTags.push(`${title} ${year}`)

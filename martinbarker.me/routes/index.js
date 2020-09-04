@@ -1,16 +1,131 @@
 const express = require('express');
 const app = express();
 var router = express.Router();
+//nodejs virbant color picker extension
+var Vibrant = require('node-vibrant')
+const Post = require('../database/models/Post.js');
+//connect to mongodb
+var mongoUtil = require( '../static/assets/js/mongoUtils' );
+
+//global vars
+allBlogPosts = []
+
+//view single blog post
+app.get('/posts/:id', async (req, res) => {
+  //get mainTemplate data
+  let mainTemplateData = await getMainTemplateData(req.params.id)
+  //get post
+  let post = null;
+  for(var i = 0; i < allBlogPosts.length; i++){
+    if(allBlogPosts[i]['_id'] == req.params.id){
+      post = allBlogPosts[i]
+    }
+  }
+  //get displayposts
+  let displayPosts = mainTemplateData.postsDisplay;
+
+  res.render('post', {
+      layout: 'mainTemplate', 
+      post: post,
+      pageTitle:post.title,
+      blog:'active',
+      //icon:'z',,
+      pageBodyNavTitle: `${post.title}`,
+      pageBodyNaavGithub: 'x',
+      postTitle: post.title,
+      postDescription: post.description,
+      postContent: post.content,
+      postDate: post.createdAt,
+      //list to display for navbar 'Blog' options
+      posts:displayPosts,
+      //mainTemplateData
+      imgPath: '/'+mainTemplateData.imgPath, 
+      imgDesc: mainTemplateData.desc,
+      imgSrc: mainTemplateData.src,
+      imgListen: mainTemplateData.listen,
+      textColor1: mainTemplateData.colorData.textColor1, //'Martin Barker' Navbar Header text color
+      backgroundColor1: mainTemplateData.colorData.backgroundColor1, //'Martin Barker' Navbar Header Background Color
+      textColor6: mainTemplateData.colorData.textColor6, //sidebar un-active tab text color
+      backgroundColor2: mainTemplateData.colorData.backgroundColor2, //sidebar un-active tab background color
+      textColor2: mainTemplateData.colorData.textColor2, //sidebar active tab
+      backgroundColor3: mainTemplateData.colorData.backgroundColor3, //sidebar active tab
+      textColor7: mainTemplateData.colorData.textColor7, //sidebar lower background
+      backgroundColor7: mainTemplateData.colorData.backgroundColor7, //sidebar lower background
+      textColor3: mainTemplateData.colorData.textColor3, //sidebar hover tab color
+      backgroundColor4: mainTemplateData.colorData.backgroundColor4, //sidebar hover tab color
+      textColor4: mainTemplateData.colorData.textColor4, //body header title color
+      backgroundColor6: mainTemplateData.colorData.backgroundColor6, //body header title color
+      textColor5: mainTemplateData.colorData.textColor5, //body color
+      backgroundColor5: mainTemplateData.colorData.backgroundColor5, //body color
+      //img color display boxes
+      Vibrant: mainTemplateData.colorData.Vibrant,
+      LightVibrant: mainTemplateData.colorData.LightVibrant,
+      DarkVibrant: mainTemplateData.colorData.DarkVibrant, 
+      Muted: mainTemplateData.colorData.Muted, 
+      LightMuted: mainTemplateData.colorData.LightMuted,
+      DarkMuted: mainTemplateData.colorData.DarkMuted, 
+      
+  })
+  
+});
+
+//home route
+app.get('/', async function (req, res) {
+  //get mainTemplate data
+  let mainTemplateData = await getMainTemplateData(req.params.id)
+  //const post = await Post.findById(req.params.id)
+  let displayPosts = mainTemplateData.postsDisplay;
+ 
+  res.render('about', {
+    //template layout to use
+    layout: 'mainTemplate', 
+    //page title of tab
+    pageTitle: 'martinbarker.me',
+    //page tab icon
+    icon: 'https://cdn4.iconfinder.com/data/icons/48-bubbles/48/06.Tags-512.png',
+    //set active current tab
+    about: 'active',
+    //body content title 
+    pageBodyNavTitle: 'martinbarker.me',
+    //body content github link
+    pageBodyNavGithub: 'temp',
+    //list to display for navbar 'Blog' options
+    posts:displayPosts,
+    //mainTemplateData
+    imgPath: '/'+mainTemplateData.imgPath, 
+    imgDesc: mainTemplateData.desc,
+    imgSrc: mainTemplateData.src,
+    imgListen: mainTemplateData.listen,
+    textColor1: mainTemplateData.colorData.textColor1, //'Martin Barker' Navbar Header text color
+    backgroundColor1: mainTemplateData.colorData.backgroundColor1, //'Martin Barker' Navbar Header Background Color
+    textColor6: mainTemplateData.colorData.textColor6, //sidebar un-active tab text color
+    backgroundColor2: mainTemplateData.colorData.backgroundColor2, //sidebar un-active tab background color
+    textColor2: mainTemplateData.colorData.textColor2, //sidebar active tab
+    backgroundColor3: mainTemplateData.colorData.backgroundColor3, //sidebar active tab
+    textColor7: mainTemplateData.colorData.textColor7, //sidebar lower background
+    backgroundColor7: mainTemplateData.colorData.backgroundColor7, //sidebar lower background
+    textColor3: mainTemplateData.colorData.textColor3, //sidebar hover tab color
+    backgroundColor4: mainTemplateData.colorData.backgroundColor4, //sidebar hover tab color
+    textColor4: mainTemplateData.colorData.textColor4, //body header title color
+    backgroundColor6: mainTemplateData.colorData.backgroundColor6, //body header title color
+    textColor5: mainTemplateData.colorData.textColor5, //body color
+    backgroundColor5: mainTemplateData.colorData.backgroundColor5, //body color
+    //img color display boxes
+    Vibrant: mainTemplateData.colorData.Vibrant,
+    LightVibrant: mainTemplateData.colorData.LightVibrant,
+    DarkVibrant: mainTemplateData.colorData.DarkVibrant, 
+    Muted: mainTemplateData.colorData.Muted, 
+    LightMuted: mainTemplateData.colorData.LightMuted,
+    DarkMuted: mainTemplateData.colorData.DarkMuted, 
+  });
+})
 
 //tagger route
 app.get('/tagger', async function (req, res) {
-  //get color data based on a random image from /static/assets/aesthetic-images
-  let colorData = await getPageColorInfo()
-  console.log('/tagger imgListenable = ', colorData.listenable)
-
-  let navbarHeaderColorObj = colorData.colors['LightMuted']
-  let navbarHeaderBackground = navbarHeaderColorObj.hex; 
-  let navbarHeaderText = getReadableTextColor(navbarHeaderColorObj.rgb)
+  //get mainTemplate data
+  let mainTemplateData = await getMainTemplateData(req.params.id)
+  
+  let displayPosts = mainTemplateData.postsDisplay;
 
   res.render('tagger', {
     //template layout to use
@@ -20,117 +135,47 @@ app.get('/tagger', async function (req, res) {
     //page tab icon
     icon: 'https://cdn4.iconfinder.com/data/icons/48-bubbles/48/06.Tags-512.png',
     //expand projects tab
-    projectsTab: 'active',
+    projects: 'active',
     //set active current tab
     tagger: 'active',
     //body content title 
     pageBodyNavTitle: 'tagger.site',
     //body content github link
-    pageBodyNavGithub: 'https://www.youtube.com/watch?v=0df7k__KEHw',
-    //img path
-    imgPath: colorData.imgPath,
-    //img listenable bool
-    //imgListenable: (colorData.listenable).toString(2),
-    //img desc
-    imgDesc: colorData.desc,
-    //img src
-    imgSrc: colorData.src,
-    //img listen
-    imgListen: colorData.listen,
-
-    /*----------
-      'Martin Barker' Navbar Header colors
-      ----------*/
-    textColor1: getReadableTextColor(colorData.colors['DarkMuted'].rgb), //background color
-    backgroundColor1: colorData.colors['DarkMuted'].hex,   //text color
-
-    /*----------
-      sidebar un-active tab colors
-      ----------*/ 
-    textColor6: getReadableTextColor(colorData.colors['LightVibrant'].rgb), //sidebar tab option text color
-    backgroundColor2: colorData.colors['LightVibrant'].hex,  //sidebar background color
-    
-    /*----------
-      sidebar active tab colors
-      ----------*/ 
-    textColor2: getReadableTextColor(colorData.colors['LightMuted'].rgb), //active tab text color
-    backgroundColor3: colorData.colors['LightMuted'].hex,
-
-    /*----------
-      sidebar lower background
-      ----------*/
-      textColor7: getReadableTextColor(colorData.colors['DarkVibrant'].rgb),
-      backgroundColor7: colorData.colors['DarkVibrant'].hex,  
-
-    /*----------
-      sidebar hover tab colors
-      ----------*/ 
-    textColor3: getReadableTextColor(colorData.colors['Vibrant'].rgb), //navbar hover tab text color
-    backgroundColor4: colorData.colors['Vibrant'].hex,
-    
-    /*----------
-      body header title colors
-      ----------*/
-    textColor4: getReadableTextColor(colorData.colors['Muted'].rgb),
-    backgroundColor6: colorData.colors['Muted'].hex,
-
-    /*----------
-      body colors
-      ----------*/
-    textColor5: getReadableTextColor(colorData.colors['LightMuted'].rgb),
-    backgroundColor5: colorData.colors['LightMuted'].hex,
-    
-
-    /* ~~~~~~~~~~~~~~~~~~~~~
-      Side-Navbar Color Data
-     ~~~~~~~~~~~~~~~~~~~~~ */
-    //'MARTIN BARKER' navbar title text color
-    //textColor1: navbarHeaderText, //colorData.colors['DarkMuted'].hex,   
-    
-    //textColor2: colorData.colors['DarkVibrant'].hex, // navbar active tab text color
-    
-    //textColor3: colorData.colors['LightMuted'].hex, //navbar hover tab text color
-    //navbar text color
-    //textColor6: colorData.colors['DarkMuted'].hex,
-
-    //'MARTIN BARKER' navbar title background color
-    //backgroundColor1: navbarHeaderBackground, //colorData.colors['Vibrant'].hex,
-    //navbar tab background color
-    //backgroundColor2: colorData.colors['LightVibrant'].hex, //linear-gradient(90deg, {{LightVibrant}}, {{Muted}});
-    //navbar active tab background color
-    //backgroundColor3: colorData.colors['DarkMuted'].hex, //linear-gradient(90deg, {{LightVibrant}}, {{LightMuted}})
-    //navbar hover tab background color
-    //backgroundColor4: colorData.colors['LightVibrant'].hex,
-
-    /* ~~~~~~~~~~~~~~~~~~~~~
-      Page-Content Color Data
-     ~~~~~~~~~~~~~~~~~~~~~ */
-    //page body background color
-    
-    //page body title background color
-    
-
-    //page body title text color
-    
-    //page body text color
-    
-    
-
+    pageBodyNavGithub: 'temp',
+    //list to display for navbar 'Blog' options
+    posts:displayPosts,
+    //mainTemplateData
+    imgPath: '/'+mainTemplateData.imgPath, 
+    imgDesc: mainTemplateData.desc,
+    imgSrc: mainTemplateData.src,
+    imgListen: mainTemplateData.listen,
+    textColor1: mainTemplateData.colorData.textColor1, //'Martin Barker' Navbar Header text color
+    backgroundColor1: mainTemplateData.colorData.backgroundColor1, //'Martin Barker' Navbar Header Background Color
+    textColor6: mainTemplateData.colorData.textColor6, //sidebar un-active tab text color
+    backgroundColor2: mainTemplateData.colorData.backgroundColor2, //sidebar un-active tab background color
+    textColor2: mainTemplateData.colorData.textColor2, //sidebar active tab
+    backgroundColor3: mainTemplateData.colorData.backgroundColor3, //sidebar active tab
+    textColor7: mainTemplateData.colorData.textColor7, //sidebar lower background
+    backgroundColor7: mainTemplateData.colorData.backgroundColor7, //sidebar lower background
+    textColor3: mainTemplateData.colorData.textColor3, //sidebar hover tab color
+    backgroundColor4: mainTemplateData.colorData.backgroundColor4, //sidebar hover tab color
+    textColor4: mainTemplateData.colorData.textColor4, //body header title color
+    backgroundColor6: mainTemplateData.colorData.backgroundColor6, //body header title color
+    textColor5: mainTemplateData.colorData.textColor5, //body color
+    backgroundColor5: mainTemplateData.colorData.backgroundColor5, //body color
     //img color display boxes
-    Vibrant: colorData.colors['Vibrant'].hex,
-    LightVibrant: colorData.colors['LightVibrant'].hex,
-    DarkVibrant: colorData.colors['DarkVibrant'].hex,
-    Muted: colorData.colors['Muted'].hex,
-    LightMuted: colorData.colors['LightMuted'].hex,
-    DarkMuted: colorData.colors['DarkMuted'].hex,
-    
-    
+    Vibrant: mainTemplateData.colorData.Vibrant,
+    LightVibrant: mainTemplateData.colorData.LightVibrant,
+    DarkVibrant: mainTemplateData.colorData.DarkVibrant, 
+    Muted: mainTemplateData.colorData.Muted, 
+    LightMuted: mainTemplateData.colorData.LightMuted,
+    DarkMuted: mainTemplateData.colorData.DarkMuted, 
   });
 })
 
 //discogstagger routes
 app.get('/discogstagger', async function(req, res){
-  let colorData = await getPageColorInfo()
+  let colorData = await getColorData()
   res.render('discogstagger', {
     layout : 'newHomeindex',
     pageTitle: 'discogstagger.site',
@@ -147,19 +192,94 @@ app.get('/discogstagger', async function(req, res){
   });
 });
 
-//nodejs virbant color picker extension
-var Vibrant = require('node-vibrant')
-
 //api route to return pageColors
 app.post('/getColors', async function (req, res) {
   //let filepath = req.body.filepath
   console.log("/getColors")
-  let colorData = await getPageColorInfo()
+  let colorData = await getColorData()
   res.send(colorData)
 });
 
+async function getMainTemplateData(activeTabId){
+  return new Promise(async function (resolve, reject) {
+    //get color data based on a random image from /static/assets/aesthetic-images
+    let colorData = await getColorData()
+    //get display title for each blog post
+    let postsDisplay = await getPostsDisplay(colorData.colors['LightMuted'].hex, activeTabId, getReadableTextColor(colorData.colors['LightMuted'].rgb))
+
+    let mainTemplateData = {
+      colorDataRaw:colorData,
+      colorData:{
+        textColor1: getReadableTextColor(colorData.colors['DarkMuted'].rgb), 
+        backgroundColor1: colorData.colors['DarkMuted'].hex,   
+        textColor2: getReadableTextColor(colorData.colors['LightMuted'].rgb), //active tab text color
+        backgroundColor2: colorData.colors['LightVibrant'].hex,
+        textColor6:getReadableTextColor(colorData.colors['LightVibrant'].rgb),
+        backgroundColor3: colorData.colors['LightMuted'].hex,
+        textColor7: getReadableTextColor(colorData.colors['DarkVibrant'].rgb),
+        backgroundColor7:  colorData.colors['DarkVibrant'].hex,
+        textColor3: getReadableTextColor(colorData.colors['Vibrant'].rgb), //navbar hover tab text color
+        backgroundColor4: colorData.colors['Vibrant'].hex, 
+        textColor4: getReadableTextColor(colorData.colors['Muted'].rgb),
+        backgroundColor6: colorData.colors['Muted'].hex,
+        textColor5: getReadableTextColor(colorData.colors['LightMuted'].rgb),
+        backgroundColor5: colorData.colors['LightMuted'].hex,
+        Vibrant: colorData.colors['Vibrant'].hex,
+        LightVibrant: colorData.colors['LightVibrant'].hex,
+        DarkVibrant: colorData.colors['DarkVibrant'].hex,
+        Muted: colorData.colors['Muted'].hex,
+        LightMuted: colorData.colors['LightMuted'].hex,
+        DarkMuted: colorData.colors['DarkMuted'].hex,
+      }, 
+      imgPath:colorData.imgPath,
+      imgDesc:colorData.desc,
+      imgSrc:colorData.src,
+      imgListen:colorData.listen,
+      
+      postsDisplay:postsDisplay,
+    }
+    resolve(mainTemplateData)
+  })
+}
+
+async function getPostsDisplay(activeTabColorHex, activeTabId, activeTabTextColor){
+  return new Promise(async function (resolve, reject) {
+    let postsDisplay = []
+    
+    var db = mongoUtil.getDb();
+    try{
+      //get db
+      var cursor = db.collection('posts').find();
+      // Execute the each command, triggers for each document
+      cursor.each(function(err, item) {
+        // If the item is null then the cursor is exhausted/empty and closed
+        if(item == null) {
+          resolve(postsDisplay)
+            return;
+        }
+        // otherwise, do something with the item
+        allBlogPosts.push(item)
+        let tempObj = null;
+        if(activeTabId == item._id){
+          tempObj = {'title':item.title, 'id':item._id, 'activeTabTextColor':activeTabTextColor, 'activeTabColor':activeTabColorHex, 'activeTab':'true'}
+        }else{
+          tempObj = {'title':item.title, 'id':item._id}
+        }
+        
+        postsDisplay.push(tempObj)
+    });
+    }catch(err){
+      console.log('err getting posts db collection')
+      resolve([])
+    }
+    
+    
+   
+  })
+}
+
 //return pageColors
-async function getPageColorInfo() {
+async function getColorData() {
   return new Promise(async function (resolve, reject) {
     let randomImg = await getRandomImg('static/assets/aesthetic-images/')
     let imgPath = `static/assets/aesthetic-images/${randomImg}`
@@ -310,99 +430,3 @@ function getRandomImg(path) {
 
 module.exports = app;
 
-
-/*
-router.get('/newHome/tagger', function(req, res) {
-  res.render('newtagger', {
-    layout : 'newHomeindex',
-    pageTitle: 'tagger.site',
-    projectsTab:'active',
-    icon: 'https://cdn4.iconfinder.com/data/icons/48-bubbles/48/06.Tags-512.png'
-  });
-})
-
-
-*/
-
-
-//app.use(router);
-//app.listen(3000);
-
-//app.post('/getColors', function (req, res) {
- // res.send('about')
-//})
-
-/*
-
-//new home routes
-router.get('/newHome', (req, res) => {
-  res.render('newhome', {  //page specific body contents
-      layout : 'newHomeindex',  //index [outside generic code: navbar/ads/SEO/accessibility]
-      pageTitle: 'tagger.site',
-      icon: '/static/assets/img/home.png',
-      homePage:'active',
-  });
-});
-
-//new tagger home route
-router.get('/newHome/tagger', (req, res) => {
-  res.render('newtagger', {
-    layout : 'newHomeindex',
-    pageTitle: 'tagger.site',
-    projectsTab:'active',
-    icon: 'https://cdn4.iconfinder.com/data/icons/48-bubbles/48/06.Tags-512.png'
-  });
-});
-
-
-//home page route
-router.get('/', (req, res) => {
-    res.render('home', {
-        layout : 'index',
-        pageTitle: 'martinbarker.me',
-        icon: 'https://cdn4.iconfinder.com/data/icons/48-bubbles/48/06.Tags-512.png',
-        expandProjects: 'active',
-        activeTagger: 'active'
-    });
-});
-
-//tagger home route
-router.get('/tagger',function(req, res){
-    res.render('tagger', {
-      layout : 'index',
-      pageTitle: 'tagger.site',
-      projectsTab:'active',
-      icon: 'https://cdn4.iconfinder.com/data/icons/48-bubbles/48/06.Tags-512.png'
-    });
-  });
-
-//discogstagger routes
-router.get('/discogstagger',function(req, res){
-    res.render('discogstagger', {
-      layout : 'index',
-      pageTitle: 'discogstagger.site',
-      projectsTab:'active',
-      icon: '/static/assets/img/discogstagger.png'
-    });
-  });
-
-*/
-
-/*
-//projects page
-router.get('/projects', (req, res) => {
-    res.render('projects', {
-        layout : 'index',
-        pageTitle: 'projects',
-        icon: '/static/assets/img/projects.png',
-        projectsTab:'active'
-    });
-});
-
-//tagger routes
-router.use('/tagger', require('./taggerRoutes').router);
-
-router.get("/url", (req, res, next) => {
-    res.json(["Tony","Lisa","Michael","Ginger","Food"]);
-});
-*/

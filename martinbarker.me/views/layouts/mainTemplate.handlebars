@@ -388,16 +388,40 @@ font-size: 1.1rem;
             </button> 
         </div>
 
+        <style>
+            .dropdown-toggle[aria-expanded="true"]:after {
+            transform: rotate(180deg); 
+            }
+
+            .opened-tab:after{
+                transform: rotate(180deg); 
+            }
+
+            /*for animation*/ 
+            .dropdown-toggle:after { 
+            transition: 0.4s; 
+            }
+        </style>
         <!-- sidenav list of items -->
         <ul class="list-unstyled components sideBarOption" style='background: {{backgroundColor7}}; color: {{textColor7}};'>
             <!-- about page -->
             <li>
-                <a href="#">About</a>
+                <a 
+                {{#ifEquals about 'active'}}
+                    style='background: {{backgroundColor3}}; color: {{textColor2}};'
+                {{/ifEquals}}
+                href="/" class='navbarItem'>About
+                </a>
             </li>
             <!-- projects dropdown -->
             <li>
                 <a href="#projectsSubmenu" data-toggle="collapse" class="dropdown-toggle ">Projects</a>
-                <ul class="collapse list-unstyled show " id="projectsSubmenu">
+                
+                <ul class="collapse list-unstyled 
+                {{#ifEquals projects 'active'}}
+                    show
+                {{/ifEquals}} 
+                " id="projectsSubmenu">
                     <!-- tagger.site -->
                     <li>
                         <a 
@@ -436,28 +460,43 @@ font-size: 1.1rem;
             </li>
             <!-- blog dropdown -->
             <li>
-                <a href="#blogSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Blog</a>
+                
+                <a href="#blogSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle
+                    {{#ifEquals blog 'active'}}
+                        opened-tab
+                    {{/ifEquals}} 
+                ">Blog
+                </a>
                 <!-- blog posts -->
-                <ul class="collapse list-unstyled" id="blogSubmenu">
-                    <li>
-                        <a href="#">Post 1</a>
-                    </li>
-                    <li>
-                        <a href="#">Post 3</a>
-                    </li>
-                    <li>
-                        <a href="#">Post 4</a>
-                    </li>
-                    <li>
-                        <a href="#">Post 5</a>
-                    </li>
-                </ul>
+                <ul class="collapse list-unstyled 
+                    {{#ifEquals blog 'active'}}
+                        show
+                    {{/ifEquals}} 
+                " id="blogSubmenu">
+                    
+                    
+                    {{#each posts}}
+                        <a 
+                        {{#ifEquals activeTab 'true'}} 
+                            style='background: {{activeTabColor}}!important; color: {{activeTabTextColor}};'
+                        {{/ifEquals}}
+
+                        
+                        class='navbarItem' href="/posts/{{id}}">{{title}}</a>
+                        
+                   
+
             </li>
+            {{/each}}
         </ul>
+    </li>
+</ul>
 
         <!-- sidenav bottom img source info -->
         <div id="pageColorsText" class='sidebar-footer'>
             <div class="sidebar-footer imageDetails">
+                <!-- refresh colors button -->
+                <button style="font-size:14px; cursor:pointer;" id="refreshButton">Refresh colors</button> 
                 <!-- img display -->
                 <img id="colorImageDisplay" src="{{imgPath}}" style="display: block;" class="responsive" alt="image alt descr">
                 <!-- img colors -->
@@ -467,8 +506,7 @@ font-size: 1.1rem;
                 <div title="Muted: {{Muted}}" class="colorBox colorBox4" style='background: {{Muted}}'></div>
                 <div title="LightMuted: {{LightMuted}}" class="colorBox colorBox5" style='background: {{LightMuted}}'></div>
                 <div title="DarkMuted: {{DarkMuted}}" class="colorBox colorBox6" style='background: {{DarkMuted}}'></div>
-                <!-- refresh colors button -->
-                <button style="font-size:14px; cursor:pointer;" id="refreshButton">Refresh colors</button> 
+                
             </div>
             
         </div>
@@ -489,7 +527,7 @@ font-size: 1.1rem;
                     <div class="w-100"></div>
                     
                     <div class="col" style=''>
-                        <a id='githubUrl' target="_blank" href='{{pageBodyNavGithub}}'>Github</a>
+                        <a id='githubUrl' target="_blank" href='{{pageBodyNavGithub}}'>View code for this page</a>
                     </div>
                 </div>
             </div>
@@ -546,7 +584,7 @@ font-size: 1.1rem;
         let innerHTMLHoverColorStyle = `
             /* githubUrl hover */
             #githubUrl:hover{
-                color:blue;
+                color:{{DarkMuted}};
             }
 
             #sidebar ul li a:hover { 
